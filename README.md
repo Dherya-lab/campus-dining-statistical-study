@@ -28,6 +28,8 @@ Institutional university hostels mandate fixed, prepaid dining contracts, yet st
 
 This project demonstrates all core modules of **BAMAT207 (Probability & Applied Statistics)** using an empirical primary sample of **$N = 208$ student responses** benchmarked against peer-reviewed literature from the *International Journal for Multidisciplinary Research* (IJFMR) and the *International Hospitality Review* (Emerald).
 
+### Live Deployment link: https://campus-dining-statistical-study.vercel.app/
+
 <div align="center">
 
 | Metric | Empirical Value | Statistical Interpretation |
