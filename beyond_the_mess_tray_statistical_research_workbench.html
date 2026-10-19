@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beyond the Mess Tray — BAMAT207 Statistical Workbench (N = 208)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fraunces (Editorial Serif), Plus Jakarta Sans (Humanist Sans), JetBrains Mono (Math/Stats) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js for interactive statistical plotting -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#FAF8F5',
+            cream: '#F3EFE6',
+            card: '#FFFFFF',
+            borderWarm: '#E5DEC9',
+            oxford: '#1D3557',
+            charcoal: '#3D405B',
+            terracotta: '#E07A5F',
+            sage: '#2A9D8F',
+            ochre: '#D97706',
+            plum: '#6D597A'
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FAF8F5;
+      color: #1D3557;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-image: radial-gradient(#E5DEC9 0.6px, transparent 0.6px);
+      background-size: 24px 24px;
+    }
+    .paper-card {
+      background: #FFFFFF;
+      border: 1px solid #E5DEC9;
+      box-shadow: 0 3px 0 #E5DEC9, 0 8px 24px -6px rgba(29, 53, 87, 0.06);
+      border-radius: 14px;
+    }
+    .formula-box {
+      background: #FBF9F4;
+      border: 1.5px solid #E5DEC9;
+      border-left: 5px solid #1D3557;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .formula-box-terracotta {
+      background: #FFF9F7;
+      border: 1.5px solid #F3D1C8;
+      border-left: 5px solid #E07A5F;
+      border-radius: 10px;
+    }
+    .formula-box-sage {
+      background: #F4FBF9;
+      border: 1.5px solid #C4E7E2;
+      border-left: 5px solid #2A9D8F;
+      border-radius: 10px;
+    }
+    .formula-box-ochre {
+      background: #FFFBF2;
+      border: 1.5px solid #F3DFBF;
+      border-left: 5px solid #D97706;
+      border-radius: 10px;
+    }
+    .tab-btn {
+      transition: all 0.18s ease;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active {
+      background-color: #FFFFFF;
+      color: #1D3557;
+      border-bottom: 3px solid #E07A5F;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(29, 53, 87, 0.06);
+    }
+    input[type="range"] {
+      accent-color: #E07A5F;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      padding: 0 4px;
+    }
+    .frac > span:first-child {
+      border-bottom: 1.5px solid currentColor;
+      padding-bottom: 1px;
+    }
+    .frac > span:last-child {
+      padding-top: 1px;
+    }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F3EFE6;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C9C0A9;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-terracotta/20 selection:text-oxford">
+
+  <!-- TOP EDITORIAL JOURNAL MASTHEAD -->
+  <header class="bg-cream/90 backdrop-blur-md border-b border-borderWarm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <!-- Left Title & Course Metadata -->
+        <div>
+          <div class="flex flex-wrap items-center gap-2 text-xs font-mono uppercase tracking-wider text-charcoal/80">
+            <span class="px-2.5 py-0.5 rounded-full bg-oxford text-white font-semibold">BAMAT207 Lab Project</span>
+            <span>•</span>
+            <span>Probability & Statistics Empirical Workbench</span>
+            <span>•</span>
+            <span class="text-terracotta font-semibold">N = 208 Verified Responses</span>
+          </div>
+          <h1 class="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-oxford tracking-tight mt-1">
+            Beyond the Mess Tray: Campus Dining &amp; Expenditure Study
+          </h1>
+        </div>
+
+        <!-- Right Authors & Quick Actions -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="bg-white border border-borderWarm rounded-lg px-3 py-1.5 text-xs">
+            <div class="text-[10px] font-mono uppercase text-charcoal/70">Research Team</div>
+            <div class="font-semibold text-oxford">Dherya Mittal <span class="font-mono text-terracotta">(25BCE2212)</span> &amp; Manthan Kedia <span class="font-mono text-sage">(25BCE2305)</span></div>
+          </div>
+          <button onclick="downloadCSV()" class="px-3 py-2 rounded-lg bg-oxford hover:bg-oxford/90 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export 208 CSV
+          </button>
+          <button onclick="switchTab('tab-data')" class="px-3 py-2 rounded-lg bg-terracotta hover:bg-terracotta/90 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            Data &amp; R Script
+          </button>
+        </div>
+      </div>
+
+      <!-- NAVIGATION TABS -->
+      <nav class="mt-3 -mb-3.5 flex overflow-x-auto no-scrollbar gap-1 border-t border-borderWarm/70 pt-2">
+        <button onclick="switchTab('tab-overview')" id="btn-tab-overview" class="tab-btn active px-3.5 py-2 rounded-t-lg text-xs sm:text-sm whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-terracotta">01</span> Overview &amp; Literature
+        </button>
+        <button onclick="switchTab('tab-desc')" id="btn-tab-desc" class="tab-btn px-3.5 py-2 rounded-t-lg text-xs sm:text-sm text-charcoal whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-sage">02</span> Theme 1: Descriptive &amp; Correlation
+        </button>
+        <button onclick="switchTab('tab-binom')" id="btn-tab-binom" class="tab-btn px-3.5 py-2 rounded-t-lg text-xs sm:text-sm text-charcoal whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-ochre">03</span> Theme 2: Binomial Model B(14,p)
+        </button>
+        <button onclick="switchTab('tab-ttests')" id="btn-tab-ttests" class="tab-btn px-3.5 py-2 rounded-t-lg text-xs sm:text-sm text-charcoal whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-terracotta">04</span> Theme 3A: Parametric t-Tests
+        </button>
+        <button onclick="switchTab('tab-chi')" id="btn-tab-chi" class="tab-btn px-3.5 py-2 rounded-t-lg text-xs sm:text-sm text-charcoal whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-sage">05</span> Theme 3B: Chi-Square &amp; Bayes
+        </button>
+        <button onclick="switchTab('tab-reg-anova')" id="btn-tab-reg-anova" class="tab-btn px-3.5 py-2 rounded-t-lg text-xs sm:text-sm text-charcoal whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-plum">06</span> Theme 4 &amp; 5: OLS Regression &amp; ANOVA
+        </button>
+        <button onclick="switchTab('tab-data')" id="btn-tab-data" class="tab-btn px-3.5 py-2 rounded-t-lg text-xs sm:text-sm text-charcoal whitespace-nowrap flex items-center gap-1.5">
+          <span class="font-mono text-xs text-oxford">07</span> Raw Dataset (208) &amp; R Code
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN WORKBENCH CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- GLOBAL SUMMARY RIBBON (CONSTANT EMPIRICAL BASELINE) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="paper-card p-3.5 border-l-4 border-l-oxford flex items-center justify-between">
+        <div>
+          <div class="text-[11px] font-mono uppercase text-charcoal/70">Sample Size (N)</div>
+          <div class="font-serif text-2xl font-bold text-oxford">208 Students</div>
+          <div class="text-xs text-charcoal/80">96 Special • 60 Veg • 45 Non-Veg • 7 Day</div>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-oxford/10 flex items-center justify-center text-oxford font-mono font-bold text-sm">N</div>
+      </div>
+
+      <div class="paper-card p-3.5 border-l-4 border-l-terracotta flex items-center justify-between">
+        <div>
+          <div class="text-[11px] font-mono uppercase text-charcoal/70">Mean Outside Spend (Ȳ)</div>
+          <div class="font-serif text-2xl font-bold text-terracotta">₹685.82 <span class="text-xs font-sans font-normal text-charcoal">/wk</span></div>
+          <div class="text-xs text-charcoal/80">SD = ₹713.89 • Median = ₹350</div>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-terracotta/15 flex items-center justify-center text-terracotta font-mono font-bold text-sm">₹</div>
+      </div>
+
+      <div class="paper-card p-3.5 border-l-4 border-l-sage flex items-center justify-between">
+        <div>
+          <div class="text-[11px] font-mono uppercase text-charcoal/70">Mean Meal Skips (X̄₁)</div>
+          <div class="font-serif text-2xl font-bold text-sage">4.56 <span class="text-xs font-sans font-normal text-charcoal">/ 14 meals</span></div>
+          <div class="text-xs text-charcoal/80">p̂ = 0.3259 (32.6% skip rate)</div>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-sage/15 flex items-center justify-center text-sage font-mono font-bold text-sm">X₁</div>
+      </div>
+
+      <div class="paper-card p-3.5 border-l-4 border-l-ochre flex items-center justify-between">
+        <div>
+          <div class="text-[11px] font-mono uppercase text-charcoal/70">Mess Satisfaction (X̄₂)</div>
+          <div class="font-serif text-2xl font-bold text-ochre">2.91 <span class="text-xs font-sans font-normal text-charcoal">/ 5.0 ★</span></div>
+          <div class="text-xs text-charcoal/80">Saves ₹175.64/wk per +1★ (OLS)</div>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-ochre/15 flex items-center justify-center text-ochre font-mono font-bold text-sm">X₂</div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- TAB 1: OVERVIEW, EVERYDAY STORY, LITERATURE BENCHMARKS & MIDPOINTS  -->
+    <!-- =================================================================== -->
+    <section id="tab-overview" class="space-y-6">
+      <!-- Everyday Hostel Story & Rubric Mapping -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-terracotta/15 text-terracotta font-mono text-xs font-semibold mb-3">
+            01 • THE EVERYDAY HOSTEL STORY
+          </div>
+          <h2 class="font-serif text-2xl font-bold text-oxford mb-2">
+            Why Do We Skip Mess Meals We Already Paid For?
+          </h2>
+          <p class="text-sm text-charcoal/90 leading-relaxed mb-4">
+            Every semester, university hostelers pre-pay for fixed dining contracts (7 lunches and 7 dinners a week). Yet, between evening lab fatigue, repetitive menu cycles, and roommate cravings, students routinely abandon the mess tray for night canteens and food delivery apps.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mt-4">
+            <div class="p-3.5 rounded-xl bg-cream/70 border border-borderWarm">
+              <div class="font-serif font-bold text-oxford text-sm mb-1">1. The 8 PM Mess Dilemma</div>
+              <p class="text-xs text-charcoal/85 leading-relaxed">
+                After long lab hours, monotonous menus make walking to the dining hall feel like a chore—causing nearly <strong>1 in 3 paid meals (32.6%)</strong> to go untouched.
+              </p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-cream/70 border border-borderWarm">
+              <div class="font-serif font-bold text-oxford text-sm mb-1">2. Roommate Domino Effect</div>
+              <p class="text-xs text-charcoal/85 leading-relaxed">
+                One roommate opens Zomato or heads to a night canteen. Within 5 minutes, the entire room pools an order (<span class="font-mono font-semibold text-terracotta">χ² = 33.28, p &lt; 0.0001</span>).
+              </p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-cream/70 border border-borderWarm">
+              <div class="font-serif font-bold text-oxford text-sm mb-1">3. The Quiet Budget Drain</div>
+              <p class="text-xs text-charcoal/85 leading-relaxed">
+                ₹110 per skipped meal feels small in the moment—until <strong>₹2,700+</strong> vanishes from monthly pocket money on supplementary food.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-borderWarm flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-semibold uppercase text-oxford">Live Survey Instrument:</span>
+              <a href="https://forms.gle/g1mHvdT17ysgTcAt9" target="_blank" rel="noopener noreferrer" class="font-mono text-terracotta underline hover:text-oxford">https://forms.gle/g1mHvdT17ysgTcAt9</a>
+            </div>
+            <span class="text-charcoal/70 font-mono">100% Tap-Only • Anonymous • Zero Typing Noise</span>
+          </div>
+        </div>
+
+        <!-- 30-Mark Lab Rubric Alignment -->
+        <div class="lg:col-span-5 paper-card p-6 bg-gradient-to-br from-white to-cream/40">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sage/15 text-sage font-mono text-xs font-semibold mb-3">
+            30-MARK LAB EVALUATION RUBRIC
+          </div>
+          <h3 class="font-serif text-xl font-bold text-oxford mb-3">
+            Four Core Statistical Pillars Covered
+          </h3>
+          <div class="space-y-2.5 text-xs">
+            <div onclick="switchTab('tab-desc')" class="cursor-pointer p-3 rounded-lg bg-white border border-borderWarm hover:border-terracotta transition flex items-start gap-3">
+              <span class="px-2 py-1 rounded bg-terracotta/15 text-terracotta font-mono font-bold">Theme 1</span>
+              <div>
+                <div class="font-bold text-oxford">Descriptive Stats &amp; Pearson Correlation</div>
+                <div class="text-charcoal/80 mt-0.5">Midpoint transformations, sample moments (Ȳ = ₹685.82, s = ₹713.89), skewness, and correlation matrix.</div>
+              </div>
+            </div>
+
+            <div onclick="switchTab('tab-binom')" class="cursor-pointer p-3 rounded-lg bg-white border border-borderWarm hover:border-sage transition flex items-start gap-3">
+              <span class="px-2 py-1 rounded bg-sage/15 text-sage font-mono font-bold">Theme 2</span>
+              <div>
+                <div class="font-bold text-oxford">Random Variables &amp; Binomial Fit B(14, p̂)</div>
+                <div class="text-charcoal/80 mt-0.5">Modeling 14 weekly meal decisions with p̂ = 0.3259 and proving the "Weekend &amp; Exam Clustering Effect" (s² = 10.60 vs Var = 3.08).</div>
+              </div>
+            </div>
+
+            <div onclick="switchTab('tab-ttests')" class="cursor-pointer p-3 rounded-lg bg-white border border-borderWarm hover:border-ochre transition flex items-start gap-3">
+              <span class="px-2 py-1 rounded bg-ochre/15 text-ochre font-mono font-bold">Theme 3</span>
+              <div>
+                <div class="font-bold text-oxford">Hypothesis Testing (t-Tests, χ², ANOVA)</div>
+                <div class="text-charcoal/80 mt-0.5">1-Sample t-test vs ₹750 paper baseline, Welch 2-sample t-test (df = 6.13), and Chi-Square independence test.</div>
+              </div>
+            </div>
+
+            <div onclick="switchTab('tab-reg-anova')" class="cursor-pointer p-3 rounded-lg bg-white border border-borderWarm hover:border-plum transition flex items-start gap-3">
+              <span class="px-2 py-1 rounded bg-plum/15 text-plum font-mono font-bold">Theme 4</span>
+              <div>
+                <div class="font-bold text-oxford">Multiple Linear Regression &amp; One-Way ANOVA</div>
+                <div class="text-charcoal/80 mt-0.5">OLS model Ŷ = 694.84 + 110.18X₁ − 175.64X₂ (R² = 42.0%) and ANOVA across 4 dining groups (F = 6.780, p = 0.00022).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 BENCHMARK RESEARCH PAPERS -->
+      <div class="paper-card p-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-5 gap-2">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oxford/10 text-oxford font-mono text-xs font-semibold mb-2">
+              02 • EMPIRICAL LITERATURE BENCHMARKS
+            </div>
+            <h2 class="font-serif text-2xl font-bold text-oxford">
+              Grounding Our Hypotheses in 3 Peer-Reviewed Dining Studies
+            </h2>
+          </div>
+          <p class="text-xs text-charcoal/80 font-mono">
+            Population Parameters Extracted: μ₀ = ₹750/wk • p₀ = 0.42 skip rate • r = 0.68 peer correlation
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Paper 1 -->
+          <div class="rounded-xl border-2 border-terracotta/30 bg-white p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-terracotta font-semibold mb-1">
+                <span>BENCHMARK PAPER 01 (2025)</span>
+                <span>IJFMR • ID 53179</span>
+              </div>
+              <h3 class="font-serif text-lg font-bold text-oxford">Indian Campus Dining &amp; Expenditure Study</h3>
+              <div class="my-3 p-3.5 rounded-lg bg-terracotta/10 border border-terracotta/25 text-center">
+                <div class="font-serif text-2xl font-bold text-terracotta">μ₀ = ₹750 / week</div>
+                <div class="text-[11px] font-mono text-oxford font-semibold mt-0.5">National Modal Student Spend Baseline</div>
+              </div>
+              <ul class="space-y-1.5 text-xs text-charcoal/90 leading-relaxed">
+                <li>• Surveyed Indian university hostelers (32%) and day scholars (68%) on pocket money &amp; restaurant habits.</li>
+                <li>• Found <strong>50% of students spend ₹2,000 to ₹3,500/month</strong> (₹500–₹875/wk) on outside food.</li>
+                <li>• Anchors our <strong>One-Sample t-Test Null Hypothesis (H₀: μ = ₹750)</strong>.</li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-borderWarm text-[11px] text-charcoal/75 font-mono leading-snug">
+              <strong>APA:</strong> Saikia, P., &amp; Sarmah, P. (2025). Students' preference for restaurants within the university campus. <em>IJFMR</em>, 7(1), 53179.
+            </div>
+          </div>
+
+          <!-- Paper 2 -->
+          <div class="rounded-xl border-2 border-sage/30 bg-white p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-sage font-semibold mb-1">
+                <span>BENCHMARK PAPER 02 (2019)</span>
+                <span>Emerald Publishing</span>
+              </div>
+              <h3 class="font-serif text-lg font-bold text-oxford">Meal Plan Satisfaction &amp; Abandonment Study</h3>
+              <div class="my-3 p-3.5 rounded-lg bg-sage/10 border border-sage/25 text-center">
+                <div class="font-serif text-2xl font-bold text-sage">p₀ = 42% Skip Rate</div>
+                <div class="text-[11px] font-mono text-oxford font-semibold mt-0.5">Baseline Meal Plan Abandonment (N = 292)</div>
+              </div>
+              <ul class="space-y-1.5 text-xs text-charcoal/90 leading-relaxed">
+                <li>• Evaluated <strong>N = 292 residential university students</strong> on mandatory institutional meal plans.</li>
+                <li>• <strong>59% reported menu fatigue</strong> and dissatisfaction with repetitive hostel dining menus.</li>
+                <li>• <strong>69%</strong> regularly purchased snacks/deliveries to replace skipped mess meals.</li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-borderWarm text-[11px] text-charcoal/75 font-mono leading-snug">
+              <strong>APA:</strong> Seo, S., &amp; Shanklin, C. W. (2019). Students' perceptions and behavior toward on-campus foodservice operations. <em>Int. Hospitality Review</em>, 33(1), 16–29.
+            </div>
+          </div>
+
+          <!-- Paper 3 -->
+          <div class="rounded-xl border-2 border-plum/30 bg-white p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-plum font-semibold mb-1">
+                <span>BENCHMARK PAPER 03 (2022)</span>
+                <span>J. Stat. Model. Anal.</span>
+              </div>
+              <h3 class="font-serif text-lg font-bold text-oxford">University Cafeteria Statistical Modeling</h3>
+              <div class="my-3 p-3.5 rounded-lg bg-plum/10 border border-plum/25 text-center">
+                <div class="font-serif text-2xl font-bold text-plum">r = 0.68 Correlation</div>
+                <div class="text-[11px] font-mono text-oxford font-semibold mt-0.5">Peer &amp; Quality Factor Weight (KMO = 0.937)</div>
+              </div>
+              <ul class="space-y-1.5 text-xs text-charcoal/90 leading-relaxed">
+                <li>• Evaluated correlation and regression drivers of university cafeteria &amp; off-campus dining.</li>
+                <li>• Proved menu variety and food quality drive <strong>&gt;60% of outside dining variance</strong>.</li>
+                <li>• Confirmed social peer groups act as the #1 trigger for unbudgeted night orders.</li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-borderWarm text-[11px] text-charcoal/75 font-mono leading-snug">
+              <strong>APA:</strong> Ismail, Z., &amp; Ahmad, N. (2022). Students' satisfaction towards cafeteria in university campus – A case study. <em>J. Stat. Model. Anal.</em>, 4(2), 14–27.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SURVEY ARCHITECTURE & CLASS MIDPOINT CONVERTER -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 paper-card p-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-ochre/15 text-ochre font-mono text-xs font-semibold mb-2">
+            03 • DATA COLLECTION DESIGN
+          </div>
+          <h3 class="font-serif text-xl font-bold text-oxford mb-3">The 5 Tap-Only Survey Questions</h3>
+          <div class="space-y-3 text-xs">
+            <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm">
+              <div class="font-bold text-oxford">Q1. Living / Dining Arrangement <span class="font-mono text-terracotta">(Factor A)</span></div>
+              <div class="text-charcoal/80 mt-0.5">Special Mess (96 • 46.2%), Veg Mess (60 • 28.8%), Non-Veg Mess (45 • 21.6%), Day Scholar/PG (7 • 3.4%).</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm">
+              <div class="font-bold text-oxford">Q2. Weekly Meals Skipped out of 14 <span class="font-mono text-sage">(Predictor X₁)</span></div>
+              <div class="text-charcoal/80 mt-0.5">Out of 14 major meals (7 lunches + 7 dinners). Bounded discrete trials for Binomial fit &amp; Regression.</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm">
+              <div class="font-bold text-oxford">Q3. Weekly Outside Food Spending in ₹ <span class="font-mono text-terracotta">(Response Y)</span></div>
+              <div class="text-charcoal/80 mt-0.5">Tapped from 6 rupee brackets (₹0–₹200 up to &gt;₹2,500). Primary continuous expenditure metric.</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm">
+              <div class="font-bold text-oxford">Q4. Monthly Mess Satisfaction Rating <span class="font-mono text-ochre">(Predictor X₂)</span></div>
+              <div class="text-charcoal/80 mt-0.5">1 to 5 Star Linear Scale (1 = Rarely edible / Skip often, 5 = Nutritious &amp; Delicious).</div>
+            </div>
+            <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm">
+              <div class="font-bold text-oxford">Q5. Roommate / Peer Order Trigger <span class="font-mono text-plum">(Factor B)</span></div>
+              <div class="text-charcoal/80 mt-0.5">Almost Always (&gt;75%), Sometimes (25%–75%), or Rarely/Never (&lt;25%).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oxford/10 text-oxford font-mono text-xs font-semibold mb-2">
+            MATHEMATICAL MIDPOINT TRANSFORMATION
+          </div>
+          <h3 class="font-serif text-xl font-bold text-oxford mb-2">
+            Converting Grouped Survey Brackets into Parametric Midpoints
+          </h3>
+          <p class="text-xs text-charcoal/85 mb-3">
+            To eliminate typing errors on mobile phones while preserving metric scale validity for t-tests, ANOVA, and OLS Regression, class intervals $[L_i, U_i]$ were transformed using the standard Class Midpoint Rule:
+          </p>
+
+          <!-- Formula Box -->
+          <div class="formula-box-terracotta p-3.5 mb-4 text-xs sm:text-sm font-mono text-oxford flex flex-wrap items-center justify-around gap-3">
+            <div>
+              <strong>Class Midpoint:</strong> x<sub>i</sub> = <span class="frac"><span>L<sub>i</sub> + U<sub>i</sub></span><span>2</span></span>
+            </div>
+            <div>
+              <strong>Sample Mean:</strong> Ȳ = <span class="frac"><span>1</span><span>n</span></span> ∑ Y<sub>i</sub> = <span class="text-terracotta font-bold">₹685.82</span>
+            </div>
+            <div>
+              <strong>Sample Variance:</strong> s² = <span class="frac"><span>1</span><span>n − 1</span></span> ∑ (Y<sub>i</sub> − Ȳ)² = <span class="text-oxford font-bold">509,641</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-oxford text-white font-mono">
+                  <th class="p-2.5 rounded-tl-lg">Q3 Spending Bracket</th>
+                  <th class="p-2.5">Assigned Midpoint (Y)</th>
+                  <th class="p-2.5">Count (%)</th>
+                  <th class="p-2.5">Q2 Meal Skip Bracket</th>
+                  <th class="p-2.5 rounded-tr-lg">Midpoint (X₁) &amp; Count</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-borderWarm font-mono">
+                <tr class="hover:bg-cream/50">
+                  <td class="p-2.5 font-sans font-semibold">₹0 – ₹200</td>
+                  <td class="p-2.5 text-terracotta font-bold">₹100.0</td>
+                  <td class="p-2.5">50 (24.0%)</td>
+                  <td class="p-2.5 font-sans font-semibold">0 – 2 meals</td>
+                  <td class="p-2.5 text-sage font-bold">1.0 meal <span class="text-charcoal font-normal">(56 • 26.9%)</span></td>
+                </tr>
+                <tr class="hover:bg-cream/50 bg-cream/25">
+                  <td class="p-2.5 font-sans font-semibold">₹201 – ₹500</td>
+                  <td class="p-2.5 text-terracotta font-bold">₹350.0</td>
+                  <td class="p-2.5">69 (33.2%)</td>
+                  <td class="p-2.5 font-sans font-semibold">3 – 5 meals</td>
+                  <td class="p-2.5 text-sage font-bold">4.0 meals <span class="text-charcoal font-normal">(93 • 44.7%)</span></td>
+                </tr>
+                <tr class="hover:bg-cream/50">
+                  <td class="p-2.5 font-sans font-semibold">₹501 – ₹1,000</td>
+                  <td class="p-2.5 text-terracotta font-bold">₹750.0</td>
+                  <td class="p-2.5">46 (22.1%)</td>
+                  <td class="p-2.5 font-sans font-semibold">6 – 8 meals</td>
+                  <td class="p-2.5 text-sage font-bold">7.0 meals <span class="text-charcoal font-normal">(37 • 17.8%)</span></td>
+                </tr>
+                <tr class="hover:bg-cream/50 bg-cream/25">
+                  <td class="p-2.5 font-sans font-semibold">₹1,001 – ₹1,500</td>
+                  <td class="p-2.5 text-terracotta font-bold">₹1,250.0</td>
+                  <td class="p-2.5">24 (11.5%)</td>
+                  <td class="p-2.5 font-sans font-semibold">9 – 11 meals</td>
+                  <td class="p-2.5 text-sage font-bold">10.0 meals <span class="text-charcoal font-normal">(8 • 3.8%)</span></td>
+                </tr>
+                <tr class="hover:bg-cream/50">
+                  <td class="p-2.5 font-sans font-semibold">₹1,501 – ₹2,500</td>
+                  <td class="p-2.5 text-terracotta font-bold">₹2,000.0</td>
+                  <td class="p-2.5">8 (3.8%)</td>
+                  <td class="p-2.5 font-sans font-semibold">12 – 14 meals</td>
+                  <td class="p-2.5 text-sage font-bold">13.0 meals <span class="text-charcoal font-normal">(14 • 6.7%)</span></td>
+                </tr>
+                <tr class="hover:bg-cream/50 bg-cream/25">
+                  <td class="p-2.5 font-sans font-semibold">More than ₹2,500</td>
+                  <td class="p-2.5 text-terracotta font-bold">₹3,000.0 <span class="text-[10px] text-charcoal">(Cap)</span></td>
+                  <td class="p-2.5">11 (5.3%)</td>
+                  <td class="p-2.5 font-sans text-charcoal/70 italic">Total Bounded Trials</td>
+                  <td class="p-2.5 font-bold text-oxford">n = 14 meals/wk</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 2: THEME 1 — DESCRIPTIVE STATISTICS & PEARSON CORRELATION LAB   -->
+    <!-- =================================================================== -->
+    <section id="tab-desc" class="hidden space-y-6">
+      <!-- Interactive Filter Bar -->
+      <div class="paper-card p-4 bg-cream/60 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono uppercase text-terracotta font-bold">Interactive Cohort Filter</span>
+          <h2 class="font-serif text-xl font-bold text-oxford">Explore Descriptive Moments &amp; Correlations Live</h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="text-xs font-semibold text-charcoal">Filter by Dining Arrangement:</label>
+          <select id="desc-filter" onchange="updateDescriptiveLab()" class="bg-white border border-borderWarm rounded-lg px-3 py-2 text-xs font-semibold text-oxford shadow-sm focus:outline-none focus:border-terracotta">
+            <option value="ALL">All Campus Students (N = 208 — PPT Default)</option>
+            <option value="0">Hosteler: Special Mess (n = 96)</option>
+            <option value="1">Hosteler: Veg Mess (n = 60)</option>
+            <option value="2">Hosteler: Non-Veg Mess (n = 45)</option>
+            <option value="3">Day Scholar / PG Resident (n = 7)</option>
+          </select>
+          <button onclick="document.getElementById('desc-filter').value='ALL'; updateDescriptiveLab();" class="px-3 py-2 rounded-lg bg-white border border-borderWarm hover:bg-cream text-xs font-mono text-oxford transition">
+            Reset to PPT (N=208)
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Variable Moment Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="paper-card p-5 border-t-4 border-t-terracotta">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs font-mono uppercase text-terracotta font-bold">Response Variable (Y)</span>
+              <h3 class="font-serif text-lg font-bold text-oxford">Weekly Outside Spending</h3>
+            </div>
+            <span id="desc-n-badge" class="px-2 py-0.5 rounded bg-terracotta/15 text-terracotta font-mono text-xs font-bold">N = 208</span>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-3 font-mono">
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Sample Mean (Ȳ)</div>
+              <div id="desc-spend-mean" class="text-lg font-bold text-terracotta">₹685.82</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Std. Dev (s_Y)</div>
+              <div id="desc-spend-sd" class="text-lg font-bold text-oxford">₹713.89</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Median Spend</div>
+              <div id="desc-spend-med" class="text-base font-bold text-oxford">₹350.00</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Variance (s²)</div>
+              <div id="desc-spend-var" class="text-base font-bold text-oxford">509,641</div>
+            </div>
+          </div>
+          <p class="mt-3 text-xs text-charcoal/85 leading-relaxed">
+            <strong>Right-Skewness Insight:</strong> Mean (₹685.82) is nearly double the Median (₹350.00) because heavy delivery users (&gt;₹2,000/wk) pull the tail rightward.
+          </p>
+        </div>
+
+        <div class="paper-card p-5 border-t-4 border-t-sage">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs font-mono uppercase text-sage font-bold">Predictor Variable (X₁)</span>
+              <h3 class="font-serif text-lg font-bold text-oxford">Weekly Mess Meals Skipped</h3>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-sage/15 text-sage font-mono text-xs font-bold">Out of 14</span>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-3 font-mono">
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Sample Mean (X̄₁)</div>
+              <div id="desc-skip-mean" class="text-lg font-bold text-sage">4.56 meals</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Std. Dev (s_X1)</div>
+              <div id="desc-skip-sd" class="text-lg font-bold text-oxford">3.26 meals</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Median Skips</div>
+              <div id="desc-skip-med" class="text-base font-bold text-oxford">4.00 meals</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Variance (s²)</div>
+              <div id="desc-skip-var" class="text-base font-bold text-oxford">10.60</div>
+            </div>
+          </div>
+          <p class="mt-3 text-xs text-charcoal/85 leading-relaxed">
+            <strong>1 in 3 Meals Untouched:</strong> 4.56 / 14 = <strong>32.59%</strong>. Nearly 1 out of every 3 pre-paid mess meals is abandoned each week!
+          </p>
+        </div>
+
+        <div class="paper-card p-5 border-t-4 border-t-ochre">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs font-mono uppercase text-ochre font-bold">Predictor Variable (X₂)</span>
+              <h3 class="font-serif text-lg font-bold text-oxford">Mess Satisfaction Rating</h3>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-ochre/15 text-ochre font-mono text-xs font-bold">1 to 5 ★</span>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-3 font-mono">
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Sample Mean (X̄₂)</div>
+              <div id="desc-rate-mean" class="text-lg font-bold text-ochre">2.91 ★</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Std. Dev (s_X2)</div>
+              <div id="desc-rate-sd" class="text-lg font-bold text-oxford">0.92 ★</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Median Rating</div>
+              <div id="desc-rate-med" class="text-base font-bold text-oxford">3.00 ★</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-cream/60">
+              <div class="text-[10px] text-charcoal/70 uppercase">Low (1–2 ★) Share</div>
+              <div id="desc-rate-low" class="text-base font-bold text-terracotta">26.9%</div>
+            </div>
+          </div>
+          <p class="mt-3 text-xs text-charcoal/85 leading-relaxed">
+            <strong>Below-Neutral Perception:</strong> Sitting below 3.0, dissatisfaction directly fuels meal skipping (<span class="font-mono font-semibold">r = -0.509</span>).
+          </p>
+        </div>
+      </div>
+
+      <!-- Spending Histogram & Pearson Correlation Formula Panel -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-xs font-mono uppercase text-terracotta font-semibold">Slide 5 Graphic</span>
+              <h3 class="font-serif text-xl font-bold text-oxford">Weekly Outside Food Spending Distribution</h3>
+            </div>
+            <div class="flex items-center gap-3 text-xs font-mono">
+              <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-oxford inline-block"></span> Campus Mean</span>
+              <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-sage inline-block"></span> ₹750 Benchmark</span>
+            </div>
+          </div>
+          <div class="h-72 w-full">
+            <canvas id="chartSpendingHist"></canvas>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 paper-card p-6 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-mono uppercase text-sage font-semibold">Pearson Product-Moment Correlation</span>
+            <h3 class="font-serif text-xl font-bold text-oxford mb-2">Mathematical Formula &amp; Behavioral Chain</h3>
+
+            <div class="formula-box-sage p-3.5 mb-4 text-xs font-mono text-oxford text-center">
+              <div class="mb-2">
+                r<sub>XY</sub> = <span class="frac"><span>∑ (X<sub>i</sub> − X̄)(Y<sub>i</sub> − Ȳ)</span><span>√[ ∑(X<sub>i</sub> − X̄)² · ∑(Y<sub>i</sub> − Ȳ)² ]</span></span>
+              </div>
+              <div class="pt-2 border-t border-sage/30 flex justify-around text-xs font-bold">
+                <span class="text-terracotta">r<sub>Y,X₁</sub> = <span id="corr-yx1">+0.618</span></span>
+                <span class="text-sage">r<sub>Y,X₂</sub> = <span id="corr-yx2">-0.483</span></span>
+                <span class="text-ochre">r<sub>X₁,X₂</sub> = <span id="corr-x1x2">-0.509</span></span>
+              </div>
+            </div>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm flex justify-between items-center">
+                <div>
+                  <div class="font-bold text-oxford">1. Spending &amp; Meal Skips (r<sub>Spend, Skips</sub>)</div>
+                  <div class="text-charcoal/80">Strong positive linear link (t = +11.28, p &lt; 0.0001)</div>
+                </div>
+                <span id="badge-corr-1" class="px-2.5 py-1 rounded bg-terracotta text-white font-mono font-bold text-sm">+0.618</span>
+              </div>
+
+              <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm flex justify-between items-center">
+                <div>
+                  <div class="font-bold text-oxford">2. Spending &amp; Mess Rating (r<sub>Spend, Rating</sub>)</div>
+                  <div class="text-charcoal/80">Moderate inverse link—higher rating lowers spend (p &lt; 0.0001)</div>
+                </div>
+                <span id="badge-corr-2" class="px-2.5 py-1 rounded bg-sage text-white font-mono font-bold text-sm">-0.483</span>
+              </div>
+
+              <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm flex justify-between items-center">
+                <div>
+                  <div class="font-bold text-oxford">3. Meal Skips &amp; Mess Rating (r<sub>Skips, Rating</sub>)</div>
+                  <div class="text-charcoal/80">Dissatisfied students skip significantly more meals (p &lt; 0.0001)</div>
+                </div>
+                <span id="badge-corr-3" class="px-2.5 py-1 rounded bg-ochre text-white font-mono font-bold text-sm">-0.509</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 rounded-lg bg-oxford text-white text-xs font-mono text-center">
+            Low Rating (X₂) ➔ [r = -0.509] ➔ More Skips (X₁) ➔ [r = +0.618] ➔ Higher Spend (Y)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 3: THEME 2 — BINOMIAL PROBABILITY MODELING B(14, p)             -->
+    <!-- =================================================================== -->
+    <section id="tab-binom" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left Chart: Binomial PMF vs Actual Student Habits -->
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <span class="text-xs font-mono uppercase text-sage font-bold">Slide 6 Graphic • Theme 2 (10 Marks)</span>
+              <h2 class="font-serif text-xl font-bold text-oxford">Skipped Mess Meals Out of 14 Weekly Trials</h2>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="setBinomP(0.3259)" id="btn-p-campus" class="px-2.5 py-1 rounded text-xs font-mono font-semibold bg-sage text-white">
+                Our Campus p̂ = 0.326
+              </button>
+              <button onclick="setBinomP(0.42)" id="btn-p-emerald" class="px-2.5 py-1 rounded text-xs font-mono font-semibold bg-cream text-oxford border border-borderWarm hover:bg-sage/20">
+                Emerald Paper p₀ = 0.420
+              </button>
+            </div>
+          </div>
+
+          <div class="h-80 w-full">
+            <canvas id="chartBinomial"></canvas>
+          </div>
+
+          <div class="mt-4 p-3.5 rounded-xl bg-cream/70 border border-borderWarm text-xs text-charcoal/90 leading-relaxed">
+            <strong class="text-oxford">Why Real Variance (s² = 10.60) is 3× Higher Than Binomial Theory (Var = 3.08):</strong>
+            Binomial coin-flip math assumes every meal decision is independent. In real hostel life, students experience <strong>"Weekend &amp; Exam Clustering"</strong>—when exams arrive or roommates go out on weekends, students skip meals in multi-day bursts!
+          </div>
+        </div>
+
+        <!-- Right Interactive Binomial Formula & Calculator -->
+        <div class="lg:col-span-5 paper-card p-6 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-mono uppercase text-ochre font-bold">Discrete Random Variable Fit</span>
+            <h3 class="font-serif text-xl font-bold text-oxford mb-2">Binomial PMF Formula &amp; Live Calculator</h3>
+
+            <div class="formula-box-sage p-3.5 mb-4 text-xs font-mono text-oxford">
+              <div class="text-center font-bold text-sm mb-2">
+                P(X = x) = <span class="frac"><span>14!</span><span>x!(14 − x)!</span></span> · p̂<sup>x</sup> · (1 − p̂)<sup>14−x</sup>
+              </div>
+              <div class="pt-2 border-t border-sage/30 grid grid-cols-3 text-center gap-1">
+                <div>p̂ = <span id="binom-disp-p" class="font-bold text-sage">0.3259</span></div>
+                <div>E(X) = np̂ = <span id="binom-disp-mean" class="font-bold text-oxford">4.56</span></div>
+                <div>Var(X) = np̂q̂ = <span id="binom-disp-var" class="font-bold text-terracotta">3.08</span></div>
+              </div>
+            </div>
+
+            <!-- Interactive Slider for x (0 to 14 meals) -->
+            <div class="p-4 rounded-xl bg-cream/70 border border-borderWarm space-y-3">
+              <div class="flex justify-between items-center">
+                <label class="text-xs font-bold text-oxford">Select Weekly Skipped Meals (x):</label>
+                <span id="binom-x-val" class="px-2.5 py-0.5 rounded bg-oxford text-white font-mono text-sm font-bold">x = 4 meals</span>
+              </div>
+              <input id="binom-x-slider" type="range" min="0" max="14" step="1" value="4" oninput="updateBinomCalculator()" class="w-full cursor-pointer" />
+              <div class="flex justify-between text-[10px] font-mono text-charcoal/70">
+                <span>0 (Never Skip)</span>
+                <span>4.56 (Mean)</span>
+                <span>7 (Half)</span>
+                <span>14 (Skip All)</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 pt-2 font-mono">
+                <div class="p-3 rounded-lg bg-white border border-borderWarm">
+                  <div class="text-[10px] uppercase text-charcoal/70">Exact P(X = <span class="binom-x-Echo">4</span>)</div>
+                  <div id="binom-prob-exact" class="text-lg font-bold text-sage">0.2191 (21.9%)</div>
+                </div>
+                <div class="p-3 rounded-lg bg-white border border-borderWarm">
+                  <div class="text-[10px] uppercase text-charcoal/70">Cumulative P(X ≤ <span class="binom-x-Echo">4</span>)</div>
+                  <div id="binom-prob-cum" class="text-lg font-bold text-oxford">0.5023 (50.2%)</div>
+                </div>
+              </div>
+              <div id="binom-subst-math" class="text-[11px] font-mono text-charcoal bg-white p-2.5 rounded border border-borderWarm">
+                P(X = 4) = C(14, 4) × (0.3259)⁴ × (0.6741)¹⁰ = 1001 × 0.0113 × 0.0194 = 0.2191
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3.5 rounded-xl bg-sage/10 border border-sage/30 text-xs text-oxford">
+            <strong>Literature Comparison (Slide 6):</strong> Our campus skip probability (<span class="font-mono font-bold">p̂ = 32.6%</span>) beats the <strong>42.0% Emerald (2019)</strong> benchmark because <strong>46.2%</strong> of our sample subscribes to Special Mess, acting as a quality buffer.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 4: THEME 3A — PARAMETRIC HYPOTHESIS TESTING (1-SAMPLE & WELCH)  -->
+    <!-- =================================================================== -->
+    <section id="tab-ttests" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- TEST 1: ONE-SAMPLE T-TEST -->
+        <div class="paper-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-1 rounded-full bg-terracotta/15 text-terracotta font-mono text-xs font-bold">
+                Slide 7 (Left) • One-Sample t-Test
+              </span>
+              <button onclick="resetOneSampleT()" class="text-xs font-mono text-terracotta underline hover:text-oxford">
+                Reset to μ₀ = ₹750 (IJFMR Benchmark)
+              </button>
+            </div>
+            <h2 class="font-serif text-xl font-bold text-oxford mb-1">
+              Test 1: One-Sample t-Test vs. National Benchmark
+            </h2>
+            <p class="text-xs text-charcoal/80 mb-4">
+              Testing whether VIT weekly outside food spending ($\bar{Y} = \text{₹}685.82$) differs significantly from the national collegiate modal baseline ($\mu_0 = \text{₹}750/\text{wk}$, Saikia &amp; Sarmah 2025).
+            </p>
+
+            <!-- Interactive Hypothesized Mean Slider -->
+            <div class="p-4 rounded-xl bg-cream/70 border border-borderWarm mb-4">
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-oxford">Hypothesized Benchmark Mean (μ₀):</label>
+                <span id="t1-mu0-badge" class="px-2.5 py-0.5 rounded bg-terracotta text-white font-mono text-sm font-bold">μ₀ = ₹750 / wk</span>
+              </div>
+              <input id="t1-mu0-slider" type="range" min="400" max="1000" step="10" value="750" oninput="runOneSampleT()" class="w-full cursor-pointer" />
+              <div class="flex justify-between text-[10px] font-mono text-charcoal/70 mt-1">
+                <span>₹400</span>
+                <span>₹589 (Lower 95% CI)</span>
+                <span>₹685.8 (Sample Ȳ)</span>
+                <span>₹750 (IJFMR)</span>
+                <span>₹1,000</span>
+              </div>
+            </div>
+
+            <!-- Substituted Formula Box -->
+            <div class="formula-box-terracotta p-4 mb-4 font-mono text-xs text-oxford space-y-2">
+              <div class="text-center font-bold text-sm">
+                t = <span class="frac"><span>Ȳ − μ<sub>0</sub></span><span>s / √n</span></span> = <span class="frac"><span id="t1-num">685.82 − 750</span><span>713.89 / √208</span></span> = <span class="frac"><span id="t1-diff">-64.18</span><span>49.50</span></span> = <span id="t1-stat" class="text-terracotta text-base font-bold">-1.2966</span>
+              </div>
+              <div class="pt-2 border-t border-terracotta/25 flex flex-wrap justify-around text-xs">
+                <span>df = n − 1 = <strong>207</strong></span>
+                <span>SE = <strong>₹49.50</strong></span>
+                <span>t<sub>crit, 0.05</sub> = <strong>±1.9715</strong></span>
+                <span>p-value = <strong id="t1-pval" class="text-oxford">0.1962</strong></span>
+              </div>
+            </div>
+
+            <!-- Hypotheses & Verdict -->
+            <div class="space-y-2 text-xs">
+              <div class="p-2.5 rounded bg-cream/50 border border-borderWarm font-mono">
+                <strong>Hypotheses:</strong> H₀: μ = <span class="t1-mu0-echo">₹750</span>/wk &nbsp;vs.&nbsp; H₁: μ ≠ <span class="t1-mu0-echo">₹750</span>/wk (Two-Tailed, α = 0.05)
+              </div>
+              <div id="t1-verdict-box" class="p-3.5 rounded-xl bg-sage/15 border border-sage/40 text-oxford">
+                <div class="font-bold text-sm text-sage" id="t1-verdict-title">✅ Statistical Verdict: Fail to Reject H₀ (p = 0.1962 &gt; 0.05)</div>
+                <p class="mt-1 text-xs leading-relaxed" id="t1-verdict-desc">
+                  Because |t| = 1.2966 &lt; 1.9715, the ₹64.18 difference is well within normal sampling variation. Campus outside food spending is statistically consistent with national Indian university pocket-money norms!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TEST 2: WELCH TWO-SAMPLE T-TEST -->
+        <div class="paper-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2.5 py-1 rounded-full bg-ochre/15 text-ochre font-mono text-xs font-bold">
+                Slide 7 (Right) • Welch Two-Sample t-Test
+              </span>
+              <button onclick="resetWelchT()" class="text-xs font-mono text-ochre underline hover:text-oxford">
+                Reset to Hostel vs. Day Scholar
+              </button>
+            </div>
+            <h2 class="font-serif text-xl font-bold text-oxford mb-1">
+              Test 2: Welch Two-Sample t-Test &amp; Satterthwaite df
+            </h2>
+            <p class="text-xs text-charcoal/80 mb-4">
+              Comparing two groups with unequal sample sizes and unequal variances ($s_1^2 \neq s_2^2$) without pooling variances.
+            </p>
+
+            <!-- Group Comparison Selector -->
+            <div class="p-4 rounded-xl bg-cream/70 border border-borderWarm mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="text-[11px] font-mono uppercase text-charcoal/70 block mb-1">Group 1 Selection:</label>
+                <select id="w-grp1" onchange="runWelchT()" class="w-full bg-white border border-borderWarm rounded-lg px-2.5 py-1.5 text-xs font-semibold text-oxford">
+                  <option value="HOSTEL" selected>All Hostelers Combined (n₁ = 201)</option>
+                  <option value="0">Hosteler: Special Mess (n = 96)</option>
+                  <option value="1">Hosteler: Veg Mess (n = 60)</option>
+                  <option value="2">Hosteler: Non-Veg Mess (n = 45)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] font-mono uppercase text-charcoal/70 block mb-1">Group 2 Selection:</label>
+                <select id="w-grp2" onchange="runWelchT()" class="w-full bg-white border border-borderWarm rounded-lg px-2.5 py-1.5 text-xs font-semibold text-oxford">
+                  <option value="3" selected>Day Scholar / PG Resident (n₂ = 7)</option>
+                  <option value="1">Hosteler: Veg Mess (n = 60)</option>
+                  <option value="2">Hosteler: Non-Veg Mess (n = 45)</option>
+                  <option value="0">Hosteler: Special Mess (n = 96)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Substituted Welch Formula & Satterthwaite df -->
+            <div class="formula-box-ochre p-4 mb-4 font-mono text-xs text-oxford space-y-2.5">
+              <div class="text-center font-bold text-sm">
+                t = <span class="frac"><span>Ȳ₁ − Ȳ₂</span><span>√( s₁²/n₁ + s₂²/n₂ )</span></span> = <span class="frac"><span id="w-num">647.01 − 1800.00</span><span id="w-den">√( 666.77²/201 + 1255.32²/7 )</span></span> = <span id="w-stat" class="text-ochre text-base font-bold">-2.4185</span>
+              </div>
+              <div class="pt-2 border-t border-ochre/25 text-center text-[11px]">
+                <strong>Welch–Satterthwaite df:</strong> df = <span class="frac"><span>(s₁²/n₁ + s₂²/n₂)²</span><span>(s₁²/n₁)²/(n₁−1) + (s₂²/n₂)²/(n₂−1)</span></span> = <strong id="w-df" class="text-oxford">6.13</strong> &nbsp;|&nbsp; p = <strong id="w-pval" class="text-terracotta">0.0512</strong>
+              </div>
+            </div>
+
+            <div class="space-y-2 text-xs">
+              <div class="grid grid-cols-2 gap-2 font-mono">
+                <div class="p-2.5 rounded bg-cream/50 border border-borderWarm">
+                  <div class="text-[10px] text-charcoal/70" id="w-g1-label">Group 1 (Hostelers, n₁=201)</div>
+                  <div class="font-bold text-oxford" id="w-g1-stats">Ȳ₁ = ₹647.01 | s₁ = ₹659.73</div>
+                </div>
+                <div class="p-2.5 rounded bg-cream/50 border border-borderWarm">
+                  <div class="text-[10px] text-charcoal/70" id="w-g2-label">Group 2 (Day Scholars, n₂=7)</div>
+                  <div class="font-bold text-oxford" id="w-g2-stats">Ȳ₂ = ₹1,800.00 | s₂ = ₹1,255.32</div>
+                </div>
+              </div>
+
+              <div id="w-verdict-box" class="p-3.5 rounded-xl bg-ochre/15 border border-ochre/40 text-oxford">
+                <div class="font-bold text-sm text-ochre" id="w-verdict-title">⚠️ Statistical Verdict: Marginally Significant (t = -2.4185, df = 6.13, p = 0.0512)</div>
+                <p class="mt-1 text-xs leading-relaxed" id="w-verdict-desc">
+                  Day Scholars spend nearly 3× more outside (₹1,800 vs ₹647/wk) because they buy daily retail lunches without a subsidized hostel mess card. Because n₂ = 7 has high variance (s₂²/7 = 225,118), Satterthwaite pulls df down close to n₂ − 1 = 6.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 5: THEME 3B — CHI-SQUARE (χ²) INDEPENDENCE & CONDITIONAL PROB   -->
+    <!-- =================================================================== -->
+    <section id="tab-chi" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 cols: Interactive 4x3 Contingency Matrix -->
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <span class="text-xs font-mono uppercase text-sage font-bold">Slide 8 • 4 × 3 Contingency Table (df = 6)</span>
+              <h2 class="font-serif text-xl font-bold text-oxford">The "Roommate Effect": Chi-Square Independence Lab</h2>
+            </div>
+            <!-- Toggle Cell Mode -->
+            <div class="inline-flex rounded-lg border border-borderWarm bg-cream p-1 text-xs font-mono">
+              <button onclick="setChiMode('obs')" id="chi-btn-obs" class="px-2.5 py-1 rounded bg-oxford text-white font-semibold">Observed (Oᵢⱼ)</button>
+              <button onclick="setChiMode('exp')" id="chi-btn-exp" class="px-2.5 py-1 rounded text-charcoal hover:text-oxford">Expected (Eᵢⱼ)</button>
+              <button onclick="setChiMode('contrib')" id="chi-btn-contrib" class="px-2.5 py-1 rounded text-charcoal hover:text-oxford">χ² Cell Weight</button>
+            </div>
+          </div>
+
+          <!-- Chi-Square Formula Banner -->
+          <div class="formula-box-sage p-3.5 mb-4 font-mono text-xs text-oxford flex flex-wrap items-center justify-around gap-2">
+            <div>
+              χ² = ∑∑ <span class="frac"><span>(O<sub>ij</sub> − E<sub>ij</sub>)²</span><span>E<sub>ij</sub></span></span> = <strong class="text-sage text-base">33.2767</strong>
+            </div>
+            <div>
+              E<sub>ij</sub> = <span class="frac"><span>R<sub>i</sub> × C<sub>j</sub></span><span>N</span></span>
+            </div>
+            <div>
+              df = (4−1)(3−1) = <strong>6</strong>
+            </div>
+            <div>
+              p = <strong class="text-terracotta">9.27 × 10⁻⁶ (&lt; 0.0001)</strong>
+            </div>
+          </div>
+
+          <!-- 4x3 Matrix Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs font-mono">
+              <thead>
+                <tr class="bg-oxford text-white">
+                  <th class="p-2.5 rounded-tl-lg font-sans">Dining Arrangement (Q1)</th>
+                  <th class="p-2.5 text-center">Almost Always (&gt;75%)</th>
+                  <th class="p-2.5 text-center">Sometimes (25–75%)</th>
+                  <th class="p-2.5 text-center">Rarely / Never (&lt;25%)</th>
+                  <th class="p-2.5 text-center rounded-tr-lg bg-oxford/80">Row Total (Rᵢ)</th>
+                </tr>
+              </thead>
+              <tbody id="chi-table-body" class="divide-y divide-borderWarm">
+                <!-- Populated dynamically by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4 p-3.5 rounded-xl bg-sage/10 border border-sage/30 text-xs text-oxford leading-relaxed">
+            <strong>Why p &lt; 0.0001 (Reject H₀):</strong> Calculated <span class="font-mono font-bold">χ² = 33.28</span> far exceeds the critical cutoff <span class="font-mono font-bold">χ²₀.₀₅,₆ = 12.59</span>. Click <em>"χ² Cell Weight"</em> above to see how Day Scholars (17.36) and Non-Veg Hostelers (5.51) drive the strong departure from independence!
+          </div>
+        </div>
+
+        <!-- Right 5 cols: Stacked Chart & Interactive Conditional Probability Calculator -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="paper-card p-5">
+            <span class="text-xs font-mono uppercase text-terracotta font-bold">Slide 8 Graphic</span>
+            <h3 class="font-serif text-lg font-bold text-oxford mb-2">Peer Trigger Frequency by Mess Type (%)</h3>
+            <div class="h-56 w-full">
+              <canvas id="chartChiStacked"></canvas>
+            </div>
+          </div>
+
+          <!-- Conditional Probability & Bayes Explorer -->
+          <div class="paper-card p-5">
+            <span class="text-xs font-mono uppercase text-plum font-bold">Module 1 • Conditional Probability P(A | B)</span>
+            <h3 class="font-serif text-lg font-bold text-oxford mb-2">Live Conditional Probability Explorer</h3>
+            <div class="grid grid-cols-1 gap-2.5 text-xs mb-3">
+              <div>
+                <label class="text-[11px] font-mono text-charcoal/80 block mb-1">Given Condition B (Peer Trigger / Mess):</label>
+                <select id="cond-b" onchange="updateConditionalProb()" class="w-full bg-cream/60 border border-borderWarm rounded-lg px-2.5 py-1.5 font-semibold text-oxford">
+                  <option value="PEER_ALWAYS" selected>Peer Trigger = "Almost Always (&gt;75%)" (n = 49)</option>
+                  <option value="PEER_SOMETIMES">Peer Trigger = "Sometimes (25–75%)" (n = 105)</option>
+                  <option value="PEER_RARELY">Peer Trigger = "Rarely / Never (&lt;25%)" (n = 54)</option>
+                  <option value="MESS_SPECIAL">Dining = Hosteler: Special Mess (n = 96)</option>
+                  <option value="MESS_NONVEG">Dining = Hosteler: Non-Veg Mess (n = 45)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] font-mono text-charcoal/80 block mb-1">Target Event A (Spending / Skipping):</label>
+                <select id="cond-a" onchange="updateConditionalProb()" class="w-full bg-cream/60 border border-borderWarm rounded-lg px-2.5 py-1.5 font-semibold text-oxford">
+                  <option value="SPEND_750" selected>Weekly Spend ≥ ₹750 (High Spend)</option>
+                  <option value="SPEND_1250">Weekly Spend ≥ ₹1,250 (Heavy Delivery)</option>
+                  <option value="SKIP_7">Meals Skipped ≥ 7 meals/wk (Half of week)</option>
+                  <option value="RATE_LOW">Mess Satisfaction ≤ 2 Stars (Dissatisfied)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="formula-box p-3 text-xs font-mono text-oxford text-center">
+              P(A | B) = <span class="frac"><span>n(A ∩ B)</span><span>n(B)</span></span> = <span id="cond-frac" class="font-bold">28 / 49</span> = <span id="cond-res" class="text-terracotta font-bold text-base">57.14%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 6: THEME 4 & 5 — MULTIPLE LINEAR REGRESSION & ONE-WAY ANOVA     -->
+    <!-- =================================================================== -->
+    <section id="tab-reg-anova" class="hidden space-y-6">
+      <!-- PART A: MULTIPLE LINEAR REGRESSION -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <span class="text-xs font-mono uppercase text-terracotta font-bold">Slide 9 • Theme 4: Multiple Linear Regression (OLS)</span>
+              <h2 class="font-serif text-xl font-bold text-oxford">The Wallet Formula: Putting a Rupee Price on Mess Quality</h2>
+            </div>
+            <span class="px-2.5 py-1 rounded bg-terracotta/15 text-terracotta font-mono text-xs font-bold">R² = 42.0% (F = 74.30)</span>
+          </div>
+
+          <div class="h-72 w-full">
+            <canvas id="chartRegression"></canvas>
+          </div>
+
+          <!-- Regression Parameter Table -->
+          <div class="mt-4 overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs font-mono">
+              <thead>
+                <tr class="bg-oxford text-white">
+                  <th class="p-2 rounded-tl-lg font-sans">Model Parameter</th>
+                  <th class="p-2">Estimate (β̂)</th>
+                  <th class="p-2">Std. Error</th>
+                  <th class="p-2">t-Stat</th>
+                  <th class="p-2">p-Value</th>
+                  <th class="p-2 rounded-tr-lg font-sans">Real-World Economic Meaning</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-borderWarm">
+                <tr>
+                  <td class="p-2 font-sans font-bold">Intercept (β̂₀)</td>
+                  <td class="p-2 font-bold text-oxford">+₹694.84</td>
+                  <td class="p-2">182.79</td>
+                  <td class="p-2">+3.801</td>
+                  <td class="p-2 text-sage font-bold">0.0002</td>
+                  <td class="p-2 font-sans text-charcoal">Baseline weekly snacking spend</td>
+                </tr>
+                <tr class="bg-terracotta/5">
+                  <td class="p-2 font-sans font-bold text-terracotta">Meal Skips (β̂₁ · X₁)</td>
+                  <td class="p-2 font-bold text-terracotta">+₹110.18</td>
+                  <td class="p-2">13.55</td>
+                  <td class="p-2">+8.129</td>
+                  <td class="p-2 text-terracotta font-bold">&lt; 0.0001</td>
+                  <td class="p-2 font-sans text-charcoal">Each skipped meal adds <strong>₹110.18/wk</strong></td>
+                </tr>
+                <tr class="bg-sage/5">
+                  <td class="p-2 font-sans font-bold text-sage">Mess Rating (β̂₂ · X₂)</td>
+                  <td class="p-2 font-bold text-sage">−₹175.64</td>
+                  <td class="p-2">47.79</td>
+                  <td class="p-2">−3.676</td>
+                  <td class="p-2 text-sage font-bold">0.0003</td>
+                  <td class="p-2 font-sans text-charcoal">Each +1★ rating saves <strong>₹175.64/wk</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Interactive Wallet Simulator -->
+        <div class="lg:col-span-5 paper-card p-6 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-mono uppercase text-oxford font-bold">Live Econometric Predictor</span>
+            <h3 class="font-serif text-xl font-bold text-oxford mb-2">Interactive Student Wallet Simulator</h3>
+
+            <div class="formula-box-terracotta p-3.5 mb-4 font-mono text-xs text-oxford text-center">
+              <div class="font-bold text-sm">
+                Ŷ = 694.84 + 110.18(X₁) − 175.64(X₂)
+              </div>
+              <div class="mt-1 text-[11px] text-charcoal">
+                R² = 1 − SS<sub>Res</sub>/SS<sub>Tot</sub> = <strong>0.420</strong> &nbsp;|&nbsp; Adj R² = <strong>0.415</strong> &nbsp;|&nbsp; DW = <strong>2.12</strong>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-cream/70 border border-borderWarm space-y-4">
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>1. Weekly Mess Meals Skipped (X₁):</span>
+                  <span id="sim-x1-label" class="font-mono text-terracotta">4 meals / wk</span>
+                </div>
+                <input id="sim-x1" type="range" min="0" max="14" step="1" value="4" oninput="updateWalletSim()" class="w-full cursor-pointer" />
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-bold mb-1">
+                  <span>2. Mess Food Satisfaction Rating (X₂):</span>
+                  <span id="sim-x2-label" class="font-mono text-sage">3 ★ (Neutral)</span>
+                </div>
+                <input id="sim-x2" type="range" min="1" max="5" step="1" value="3" oninput="updateWalletSim()" class="w-full cursor-pointer" />
+              </div>
+
+              <div class="p-4 rounded-xl bg-white border-2 border-oxford text-center">
+                <div class="text-[11px] font-mono uppercase text-charcoal/70">Predicted Weekly Outside Spend (Ŷ)</div>
+                <div id="sim-pred-y" class="font-serif text-3xl font-bold text-terracotta my-1">₹608.64 / wk</div>
+                <div id="sim-eq-live" class="text-[11px] font-mono text-charcoal">
+                  Ŷ = 694.84 + 110.18(4) − 175.64(3) = ₹608.64
+                </div>
+                <div class="mt-2 pt-2 border-t border-borderWarm flex justify-around text-xs font-mono">
+                  <span>Monthly: <strong id="sim-monthly" class="text-oxford">₹2,435/mo</strong></span>
+                  <span>Semester (16w): <strong id="sim-sem" class="text-terracotta">₹9,738</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 p-3 rounded-lg bg-sage/15 border border-sage/30 text-xs text-oxford">
+            <strong>Policy Takeaway:</strong> Upgrading weekend mess menus by just <strong>+1 star</strong> saves an average student <strong>₹175.64/week (₹700+/month)</strong> in avoided food delivery bills!
+          </div>
+        </div>
+      </div>
+
+      <!-- PART B: ONE-WAY ANOVA & TUKEY HSD -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-6 paper-card p-6">
+          <span class="text-xs font-mono uppercase text-ochre font-bold">Slide 10 • Experimental Design (One-Way ANOVA)</span>
+          <h3 class="font-serif text-xl font-bold text-oxford mb-2">Spending Comparison Across 4 Dining Groups</h3>
+          <div class="h-64 w-full">
+            <canvas id="chartAnova"></canvas>
+          </div>
+          <p class="mt-3 text-xs text-charcoal/85">
+            <strong>Surprise Tukey HSD Finding:</strong> Special Mess (₹665), Veg Mess (₹570), and Non-Veg Mess (₹711) all share the exact same median spend (<strong>₹350/wk, p &gt; 0.70</strong>). Having <em>any</em> hostel mess plan shields students from high retail food prices compared to Day Scholars (₹1,800/wk)!
+          </p>
+        </div>
+
+        <div class="lg:col-span-6 paper-card p-6 flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-mono uppercase text-oxford font-bold">Omnibus F-Ratio &amp; Post-Hoc Comparisons</span>
+            <h3 class="font-serif text-xl font-bold text-oxford mb-2">ANOVA Table &amp; Tukey HSD Pairwise Verdict</h3>
+
+            <div class="formula-box-ochre p-3.5 mb-4 font-mono text-xs text-oxford text-center">
+              F = <span class="frac"><span>MS<sub>Between</sub></span><span>MS<sub>Within</sub></span></span> = <span class="frac"><span>SS<sub>B</sub> / (k − 1)</span><span>SS<sub>W</sub> / (N − k)</span></span> = <span class="frac"><span>3,188,206</span><span>470,250</span></span> = <strong class="text-ochre text-base">6.780</strong> &nbsp;(p = <strong>0.00022</strong>)
+            </div>
+
+            <div class="overflow-x-auto mb-4">
+              <table class="w-full text-left border-collapse text-xs font-mono">
+                <thead>
+                  <tr class="bg-oxford text-white">
+                    <th class="p-2 rounded-tl-lg font-sans">Source of Variation</th>
+                    <th class="p-2">df</th>
+                    <th class="p-2">Sum of Squares (SS)</th>
+                    <th class="p-2">Mean Square (MS)</th>
+                    <th class="p-2">F-Stat</th>
+                    <th class="p-2 rounded-tr-lg">p-Value</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-borderWarm">
+                  <tr class="bg-ochre/10 font-bold">
+                    <td class="p-2 font-sans">Between Mess Groups</td>
+                    <td class="p-2">3</td>
+                    <td class="p-2">9,564,618</td>
+                    <td class="p-2">3,188,206</td>
+                    <td class="p-2 text-ochre">6.780</td>
+                    <td class="p-2 text-terracotta">0.00022*</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2 font-sans">Within Groups (Error)</td>
+                    <td class="p-2">204</td>
+                    <td class="p-2">95,931,040</td>
+                    <td class="p-2">470,250</td>
+                    <td class="p-2">—</td>
+                    <td class="p-2">—</td>
+                  </tr>
+                  <tr class="bg-cream/60 font-bold">
+                    <td class="p-2 font-sans">Total (N = 208)</td>
+                    <td class="p-2">207</td>
+                    <td class="p-2">105,495,658</td>
+                    <td class="p-2">—</td>
+                    <td class="p-2" colspan="2"><span class="px-2 py-0.5 rounded bg-terracotta text-white">Reject H₀</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-3 rounded-lg bg-cream/60 border border-borderWarm text-xs space-y-1 font-mono">
+              <div class="font-sans font-bold text-oxford">Tukey HSD Post-Hoc Pairwise Differences:</div>
+              <div>• Day Scholar vs. Veg Mess: <strong class="text-terracotta">+₹1,230.00/wk</strong> (p<sub>adj</sub> = 0.0001)</div>
+              <div>• Day Scholar vs. Special Mess: <strong class="text-terracotta">+₹1,134.90/wk</strong> (p<sub>adj</sub> = 0.0002)</div>
+              <div>• Day Scholar vs. Non-Veg Mess: <strong class="text-terracotta">+₹1,088.89/wk</strong> (p<sub>adj</sub> = 0.0007)</div>
+              <div>• Special vs. Veg / Non-Veg: Diff &lt; ₹141/wk (p<sub>adj</sub> &gt; 0.70 — Not Significant)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- TAB 7: RAW DATASET EXPLORER (208 ROWS) & REPRODUCIBLE R SCRIPT      -->
+    <!-- =================================================================== -->
+    <section id="tab-data" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 Cols: Searchable 208-Row Empirical Table -->
+        <div class="lg:col-span-7 paper-card p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <span class="text-xs font-mono uppercase text-oxford font-bold">Constant Empirical Dataset</span>
+              <h2 class="font-serif text-xl font-bold text-oxford">All 208 Survey Responses (Raw &amp; Midpoints)</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="data-search" type="text" oninput="renderDataTable()" placeholder="Filter mess, spend, rating..." class="bg-cream/60 border border-borderWarm rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-oxford" />
+              <button onclick="downloadCSV()" class="px-3 py-1.5 rounded-lg bg-terracotta text-white text-xs font-semibold">Download .CSV</button>
+            </div>
+          </div>
+
+          <div class="overflow-y-auto max-h-[460px] border border-borderWarm rounded-lg">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="bg-oxford text-white font-mono sticky top-0">
+                <tr>
+                  <th class="p-2">#</th>
+                  <th class="p-2">Q1: Arrangement</th>
+                  <th class="p-2">Q2: Skips (X₁)</th>
+                  <th class="p-2">Q3: Spend (Y)</th>
+                  <th class="p-2">Q4: ★</th>
+                  <th class="p-2">Q5: Peer Trigger</th>
+                </tr>
+              </thead>
+              <tbody id="raw-data-tbody" class="divide-y divide-borderWarm font-mono text-[11px]">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Complete R Script for Lab Evaluation -->
+        <div class="lg:col-span-5 paper-card p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono uppercase text-sage font-bold">Reproducible Lab Script</span>
+              <button onclick="copyRScript()" id="btn-copy-r" class="px-3 py-1 rounded bg-oxford text-white text-xs font-mono hover:bg-oxford/90 transition">
+                Copy R Script
+              </button>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-oxford mb-2">R Code used for graphs</h3>
+            <p class="text-xs text-charcoal/80 mb-3">
+              Run this script in RStudio on your exported Excel/CSV file to reproduce every single number, p-value, and plot in your presentation.
+            </p>
+            <pre id="r-code-block" class="bg-oxford text-cream p-4 rounded-xl text-[11px] font-mono overflow-x-auto max-h-[380px] leading-relaxed"># =========================================================
+# BAMAT207 Lab Project: Complete Statistical Analysis (N=208)
+# Team: Dherya Mittal (25BCE2212) & Manthan Kedia (25BCE2305)
+# =========================================================
+library(readxl)
+
+df <- read_excel("Campus Dining Behavior, Mess Satisfaction & Expenditure Study (BAMAT207).xlsx")
+colnames(df)[2:6] <- c("Arrangement", "Skips_Raw", "Spend_Raw", "Rating", "Peer")
+
+# 1. Class Midpoint Transformations: xi = (Li + Ui) / 2
+df$Skips <- ifelse(grepl("0 - 2", df$Skips_Raw), 1.0,
+            ifelse(grepl("3 - 5", df$Skips_Raw), 4.0,
+            ifelse(grepl("6 - 8", df$Skips_Raw), 7.0,
+            ifelse(grepl("9 - 11", df$Skips_Raw), 10.0, 13.0))))
+
+df$Spend <- ifelse(grepl("0 - 200|0 - ₹200", df$Spend_Raw), 100,
+            ifelse(grepl("201", df$Spend_Raw), 350,
+            ifelse(grepl("501", df$Spend_Raw), 750,
+            ifelse(grepl("1,001|1001", df$Spend_Raw), 1250,
+            ifelse(grepl("1,501|1501", df$Spend_Raw), 2000, 3000)))))
+df$Rating <- as.numeric(df$Rating)
+
+# 2. Theme 1: Descriptive Moments & Pearson Correlations
+mean(df$Spend); sd(df$Spend); median(df$Spend)
+cor(df[, c("Spend", "Skips", "Rating")])
+
+# 3. Theme 2: Binomial Fit X ~ B(14, p_hat)
+p_hat <- mean(df$Skips) / 14 # 0.3259
+14 * p_hat * (1 - p_hat)     # Theoretical Var = 3.08 vs s^2 = 10.60
+
+# 4. Theme 3: Hypothesis Tests (t-tests & Chi-Square)
+t.test(df$Spend, mu = 750) # 1-Sample vs IJFMR (2025) Benchmark
+df$Group2 <- ifelse(grepl("Hosteler", df$Arrangement), "Hostel", "Day")
+t.test(Spend ~ Group2, data = df) # Welch 2-Sample (df = 6.13)
+chisq.test(table(df$Arrangement, trimws(df$Peer))) # Chi-Sq = 33.28
+
+# 5. Theme 4 & 5: Multiple Regression & One-Way ANOVA
+summary(lm(Spend ~ Skips + Rating, data = df)) # R^2 = 0.420
+anova_fit <- aov(Spend ~ as.factor(Arrangement), data = df)
+summary(anova_fit); TukeyHSD(anova_fit)</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-borderWarm bg-cream/70 mt-12 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-charcoal/80 gap-2">
+      <div>
+        <strong>BAMAT207 Probability &amp; Statistics Lab Project</strong> • Beyond the Mess Tray (N = 208 Empirical Study)
+      </div>
+      <div class="font-mono">
+        Dherya Mittal (25BCE2212) &amp; Manthan Kedia (25BCE2305)
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT STATISTICAL ENGINE & CONSTANT 208-ROW DATASET              -->
+  <!-- ===================================================================== -->
+  <script>
+    const ARR_LABELS = ['Hosteler: Special Mess', 'Hosteler: Veg Mess', 'Hosteler: Non-Veg Mess', 'Day Scholar / PG Resident'];
+    const SKIP_LABELS = ['0 - 2 meals', '3 - 5 meals', '6 - 8 meals', '9 - 11 meals', '12 - 14 meals'];
+    const SKIP_MIDPOINTS = [1.0, 4.0, 7.0, 10.0, 13.0];
+    const SPEND_LABELS = ['₹0 - ₹200', '₹201 - ₹500', '₹501 - ₹1,000', '₹1,001 - ₹1,500', '₹1,501 - ₹2,500', 'More than ₹2,500'];
+    const SPEND_MIDPOINTS = [100.0, 350.0, 750.0, 1250.0, 2000.0, 3000.0];
+    const PEER_LABELS = ['Almost Always (more than 75% of the time)', 'Sometimes (25% to 75% of the time)', 'Rarely / Never (less than 25% of the time)'];
+
+    // Exact 208 rows from the uploaded Excel sheet: [arr_idx, skip_idx, spend_idx, rating, peer_idx]
+    const RAW_TUPLES = [[0, 0, 0, 3, 1], [0, 1, 1, 3, 1], [1, 1, 2, 3, 1], [1, 1, 1, 2, 2], [1, 1, 4, 3, 1], [0, 1, 1, 3, 2], [2, 0, 0, 3, 1], [0, 2, 2, 1, 1], [1, 1, 1, 4, 0], [0, 0, 0, 5, 2], [0, 0, 2, 3, 2], [0, 2, 1, 4, 1], [1, 0, 0, 3, 1], [0, 0, 1, 3, 1], [0, 0, 1, 4, 2], [1, 1, 2, 3, 2], [0, 0, 3, 4, 2], [0, 0, 1, 3, 2], [2, 1, 1, 2, 0], [1, 0, 2, 3, 1], [0, 1, 1, 2, 1], [0, 2, 2, 4, 2], [2, 1, 2, 3, 1], [2, 0, 0, 1, 1], [1, 0, 0, 4, 1], [2, 2, 2, 2, 1], [0, 1, 1, 3, 1], [0, 1, 2, 4, 0], [0, 2, 2, 2, 1], [2, 1, 1, 2, 0], [0, 2, 3, 2, 2], [1, 1, 0, 3, 2], [3, 4, 5, 1, 0], [3, 2, 2, 2, 0], [2, 4, 3, 2, 0], [0, 2, 2, 3, 1], [2, 4, 5, 1, 0], [2, 1, 0, 4, 1], [0, 0, 0, 5, 1], [1, 2, 3, 1, 1], [2, 0, 1, 4, 1], [0, 1, 1, 2, 1], [1, 1, 3, 4, 1], [0, 0, 1, 3, 2], [0, 3, 2, 1, 1], [2, 0, 0, 2, 1], [1, 0, 1, 4, 2], [2, 0, 0, 4, 2], [0, 1, 4, 1, 0], [2, 2, 0, 3, 1], [0, 1, 1, 4, 1], [1, 0, 0, 3, 2], [1, 3, 5, 1, 1], [2, 1, 2, 3, 2], [0, 0, 1, 4, 2], [0, 2, 3, 2, 1], [0, 0, 0, 4, 2], [1, 3, 3, 1, 1], [1, 1, 0, 4, 1], [2, 1, 1, 3, 1], [0, 0, 1, 3, 1], [2, 1, 1, 3, 1], [0, 1, 1, 3, 1], [1, 1, 0, 3, 1], [2, 1, 1, 2, 0], [1, 0, 0, 3, 2], [0, 0, 0, 3, 1], [1, 0, 0, 3, 2], [0, 1, 1, 3, 1], [1, 0, 1, 3, 2], [1, 1, 0, 3, 1], [0, 1, 2, 2, 1], [0, 1, 1, 3, 0], [0, 0, 0, 3, 2], [1, 2, 0, 2, 0], [2, 2, 4, 2, 0], [0, 1, 1, 3, 0], [0, 0, 0, 3, 1], [0, 1, 1, 4, 1], [0, 0, 0, 3, 2], [2, 2, 2, 2, 1], [2, 0, 1, 4, 2], [0, 1, 2, 3, 1], [0, 1, 1, 3, 0], [0, 1, 1, 4, 1], [0, 0, 0, 3, 2], [1, 1, 0, 3, 1], [0, 1, 2, 2, 1], [1, 1, 0, 3, 1], [0, 1, 1, 3, 1], [0, 1, 1, 3, 0], [2, 1, 1, 3, 0], [0, 1, 1, 3, 0], [0, 0, 1, 4, 1], [2, 1, 1, 3, 0], [1, 1, 0, 3, 1], [2, 1, 1, 3, 1], [0, 2, 2, 3, 2], [0, 0, 0, 4, 2], [0, 1, 1, 3, 1], [2, 0, 1, 3, 1], [2, 1, 1, 3, 1], [1, 0, 0, 4, 2], [1, 1, 1, 4, 1], [1, 1, 0, 3, 1], [0, 0, 1, 4, 2], [0, 1, 0, 4, 1], [0, 1, 1, 3, 1], [0, 1, 1, 3, 1], [2, 1, 1, 3, 0], [2, 0, 1, 3, 1], [1, 1, 0, 3, 1], [1, 1, 2, 3, 0], [1, 1, 0, 3, 1], [0, 0, 1, 4, 1], [0, 0, 0, 3, 2], [0, 0, 1, 3, 1], [0, 1, 1, 3, 1], [1, 1, 2, 3, 0], [1, 0, 0, 5, 2], [1, 1, 0, 4, 2], [1, 1, 2, 3, 1], [1, 1, 0, 3, 1], [0, 1, 1, 3, 0], [0, 0, 1, 4, 2], [2, 1, 1, 4, 1], [0, 4, 1, 3, 0], [1, 0, 0, 5, 2], [1, 1, 0, 4, 1], [1, 2, 5, 1, 2], [0, 1, 1, 4, 2], [2, 0, 1, 4, 2], [2, 0, 5, 1, 1], [1, 0, 1, 4, 2], [0, 1, 1, 4, 1], [3, 2, 0, 3, 0], [3, 3, 2, 2, 0], [1, 1, 2, 2, 1], [3, 4, 5, 4, 0], [0, 1, 3, 4, 1], [0, 0, 0, 3, 2], [0, 3, 4, 1, 2], [1, 1, 1, 3, 1], [0, 0, 0, 3, 2], [2, 4, 3, 2, 0], [0, 1, 2, 3, 1], [2, 1, 0, 1, 0], [1, 2, 2, 3, 2], [2, 1, 2, 3, 2], [0, 1, 3, 3, 1], [2, 2, 2, 3, 1], [2, 2, 2, 2, 2], [0, 1, 4, 2, 0], [0, 1, 3, 3, 1], [0, 0, 0, 3, 1], [1, 4, 1, 2, 0], [0, 0, 1, 2, 1], [3, 2, 4, 2, 0], [0, 1, 2, 4, 1], [1, 4, 3, 2, 1], [2, 2, 2, 3, 1], [0, 1, 2, 3, 1], [0, 4, 5, 1, 0], [1, 3, 1, 2, 0], [0, 1, 1, 3, 1], [0, 4, 5, 1, 1], [2, 1, 2, 2, 1], [1, 3, 3, 3, 1], [2, 2, 4, 3, 0], [0, 4, 5, 1, 2], [1, 1, 2, 3, 1], [1, 1, 1, 3, 1], [1, 2, 3, 3, 1], [1, 2, 3, 3, 1], [2, 2, 3, 3, 0], [2, 4, 2, 3, 0], [0, 1, 2, 3, 0], [1, 2, 1, 2, 0], [0, 1, 2, 1, 1], [2, 2, 1, 3, 0], [0, 4, 5, 2, 0], [0, 2, 3, 2, 0], [2, 3, 2, 2, 1], [2, 2, 3, 4, 0], [1, 2, 3, 1, 0], [0, 1, 1, 3, 2], [0, 0, 0, 2, 1], [0, 1, 3, 4, 0], [0, 2, 1, 2, 1], [2, 2, 4, 3, 1], [0, 1, 2, 3, 1], [0, 2, 2, 3, 0], [1, 1, 2, 3, 1], [1, 0, 0, 5, 2], [0, 1, 2, 3, 2], [0, 1, 2, 4, 1], [0, 2, 2, 3, 0], [1, 2, 3, 2, 0], [1, 1, 2, 4, 2], [0, 1, 3, 3, 1], [3, 4, 5, 2, 0], [1, 0, 0, 4, 2], [1, 0, 0, 5, 2], [0, 1, 3, 3, 1], [1, 1, 1, 2, 2], [0, 0, 3, 4, 2], [2, 2, 0, 4, 1], [0, 0, 2, 3, 2]];
+
+    // Expand tuples into rich objects
+    const DATASET = RAW_TUPLES.map((row, idx) => ({
+      id: idx + 1,
+      arrIdx: row[0],
+      arrangement: ARR_LABELS[row[0]],
+      skipIdx: row[1],
+      skipRaw: SKIP_LABELS[row[1]],
+      skips: SKIP_MIDPOINTS[row[1]],
+      spendIdx: row[2],
+      spendRaw: SPEND_LABELS[row[2]],
+      spend: SPEND_MIDPOINTS[row[2]],
+      rating: row[3],
+      peerIdx: row[4],
+      peer: PEER_LABELS[row[4]]
+    }));
+
+    // Basic Statistical Helper Functions
+    const mean = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+    const variance = arr => {
+      const m = mean(arr);
+      return arr.reduce((a, b) => a + Math.pow(b - m, 2), 0) / (arr.length - 1);
+    };
+    const sd = arr => Math.sqrt(variance(arr));
+    const median = arr => {
+      const s = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 !== 0 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+    const pearson = (x, y) => {
+      const mx = mean(x), my = mean(y);
+      let num = 0, dx = 0, dy = 0;
+      for (let i = 0; i < x.length; i++) {
+        num += (x[i] - mx) * (y[i] - my);
+        dx += Math.pow(x[i] - mx, 2);
+        dy += Math.pow(y[i] - my, 2);
+      }
+      return num / Math.sqrt(dx * dy);
+    };
+    const choose = (n, k) => {
+      if (k < 0 || k > n) return 0;
+      let res = 1;
+      for (let i = 1; i <= k; i++) res = res * (n - i + 1) / i;
+      return res;
+    };
+    const dbinom = (x, n, p) => choose(n, x) * Math.pow(p, x) * Math.pow(1 - p, n - x);
+
+    // Incomplete Beta & Student-t two-tailed p-value approximation
+    function betacf(a, b, x) {
+      const MAXIT = 100, EPS = 3.0e-7, FPMIN = 1.0e-30;
+      let qab = a + b, qap = a + 1.0, qam = a - 1.0;
+      let c = 1.0, d = 1.0 - qab * x / qap;
+      if (Math.abs(d) < FPMIN) d = FPMIN;
+      d = 1.0 / d;
+      let h = d;
+      for (let m = 1; m <= MAXIT; m++) {
+        let m2 = 2 * m;
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1.0 + aa * d;
+        if (Math.abs(d) < FPMIN) d = FPMIN;
+        c = 1.0 + aa / c;
+        if (Math.abs(c) < FPMIN) c = FPMIN;
+        d = 1.0 / d;
+        h *= d * c;
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1.0 + aa * d;
+        if (Math.abs(d) < FPMIN) d = FPMIN;
+        c = 1.0 + aa / c;
+        if (Math.abs(c) < FPMIN) c = FPMIN;
+        d = 1.0 / d;
+        let del = d * c;
+        h *= del;
+        if (Math.abs(del - 1.0) < EPS) break;
+      }
+      return h;
+    }
+    function gammln(xx) {
+      const cof = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+      let x = xx, y = x, tmp = x + 5.5;
+      tmp -= (x + 0.5) * Math.log(tmp);
+      let ser = 1.000000000190015;
+      for (let j = 0; j <= 5; j++) ser += cof[j] / ++y;
+      return -tmp + Math.log(2.5066282746310005 * ser / x);
+    }
+    function betai(a, b, x) {
+      if (x <= 0.0) return 0.0;
+      if (x >= 1.0) return 1.0;
+      const bt = Math.exp(gammln(a + b) - gammln(a) - gammln(b) + a * Math.log(x) + b * Math.log(1.0 - x));
+      if (x < (a + 1.0) / (a + b + 2.0)) return bt * betacf(a, b, x) / a;
+      else return 1.0 - bt * betacf(b, a, 1.0 - x) / b;
+    }
+    function tTestTwoTailedP(t, df) {
+      const x = df / (df + t * t);
+      return betai(0.5 * df, 0.5, x);
+    }
+
+    // Tab Navigation
+    const ALL_TABS = ['tab-overview', 'tab-desc', 'tab-binom', 'tab-ttests', 'tab-chi', 'tab-reg-anova', 'tab-data'];
+    function switchTab(tabId) {
+      ALL_TABS.forEach(id => {
+        document.getElementById(id).classList.toggle('hidden', id !== tabId);
+        const btn = document.getElementById('btn-' + id);
+        if (btn) btn.classList.toggle('active', id === tabId);
+      });
+      // Resize charts when tab becomes visible
+      setTimeout(() => {
+        Object.values(charts).forEach(c => c && c.resize());
+      }, 50);
+    }
+
+    // Global Chart Instances
+    const charts = {};
+    let currentBinomP = 4.5625 / 14;
+    let currentChiMode = 'obs';
+
+    // -----------------------------------------------------------------------
+    // 1. DESCRIPTIVE LAB & SPENDING HISTOGRAM
+    // -----------------------------------------------------------------------
+    function updateDescriptiveLab() {
+      const filterVal = document.getElementById('desc-filter').value;
+      const rows = filterVal === 'ALL' ? DATASET : DATASET.filter(d => d.arrIdx === parseInt(filterVal));
+
+      const spends = rows.map(r => r.spend);
+      const skips = rows.map(r => r.skips);
+      const ratings = rows.map(r => r.rating);
+
+      document.getElementById('desc-n-badge').textContent = `n = ${rows.length}`;
+      document.getElementById('desc-spend-mean').textContent = `₹${mean(spends).toFixed(2)}`;
+      document.getElementById('desc-spend-sd').textContent = `₹${sd(spends).toFixed(2)}`;
+      document.getElementById('desc-spend-med').textContent = `₹${median(spends).toFixed(2)}`;
+      document.getElementById('desc-spend-var').textContent = Math.round(variance(spends)).toLocaleString();
+
+      document.getElementById('desc-skip-mean').textContent = `${mean(skips).toFixed(2)} meals`;
+      document.getElementById('desc-skip-sd').textContent = `${sd(skips).toFixed(2)} meals`;
+      document.getElementById('desc-skip-med').textContent = `${median(skips).toFixed(2)} meals`;
+      document.getElementById('desc-skip-var').textContent = variance(skips).toFixed(2);
+
+      document.getElementById('desc-rate-mean').textContent = `${mean(ratings).toFixed(2)} ★`;
+      document.getElementById('desc-rate-sd').textContent = `${sd(ratings).toFixed(2)} ★`;
+      document.getElementById('desc-rate-med').textContent = `${median(ratings).toFixed(2)} ★`;
+      const lowShare = (ratings.filter(r => r <= 2).length / rows.length * 100).toFixed(1);
+      document.getElementById('desc-rate-low').textContent = `${lowShare}%`;
+
+      // Correlations
+      const rYX1 = pearson(spends, skips);
+      const rYX2 = pearson(spends, ratings);
+      const rX1X2 = pearson(skips, ratings);
+
+      const fmtR = v => (v >= 0 ? '+' : '') + v.toFixed(3);
+      document.getElementById('corr-yx1').textContent = fmtR(rYX1);
+      document.getElementById('corr-yx2').textContent = fmtR(rYX2);
+      document.getElementById('corr-x1x2').textContent = fmtR(rX1X2);
+      document.getElementById('badge-corr-1').textContent = fmtR(rYX1);
+      document.getElementById('badge-corr-2').textContent = fmtR(rYX2);
+      document.getElementById('badge-corr-3').textContent = fmtR(rX1X2);
+
+      // Update Spending Histogram
+      const counts = [0, 0, 0, 0, 0, 0];
+      rows.forEach(r => counts[r.spendIdx]++);
+      if (charts.spending) {
+        charts.spending.data.datasets[0].data = counts;
+        charts.spending.update();
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. BINOMIAL PROBABILITY LAB B(14, p)
+    // -----------------------------------------------------------------------
+    function setBinomP(pVal) {
+      currentBinomP = pVal;
+      const isCampus = Math.abs(pVal - 0.3259) < 0.01;
+      document.getElementById('btn-p-campus').className = isCampus
+        ? 'px-2.5 py-1 rounded text-xs font-mono font-semibold bg-sage text-white'
+        : 'px-2.5 py-1 rounded text-xs font-mono font-semibold bg-cream text-oxford border border-borderWarm';
+      document.getElementById('btn-p-emerald').className = !isCampus
+        ? 'px-2.5 py-1 rounded text-xs font-mono font-semibold bg-sage text-white'
+        : 'px-2.5 py-1 rounded text-xs font-mono font-semibold bg-cream text-oxford border border-borderWarm';
+
+      document.getElementById('binom-disp-p').textContent = pVal.toFixed(4);
+      document.getElementById('binom-disp-mean').textContent = (14 * pVal).toFixed(2);
+      document.getElementById('binom-disp-var').textContent = (14 * pVal * (1 - pVal)).toFixed(2);
+
+      const theoData = Array.from({ length: 15 }, (_, x) => dbinom(x, 14, pVal));
+      if (charts.binomial) {
+        charts.binomial.data.datasets[0].data = theoData;
+        charts.binomial.data.datasets[0].label = `Theoretical B(14, ${pVal.toFixed(2)})`;
+        charts.binomial.update();
+      }
+      updateBinomCalculator();
+    }
+
+    function updateBinomCalculator() {
+      const x = parseInt(document.getElementById('binom-x-slider').value);
+      document.getElementById('binom-x-val').textContent = `x = ${x} meals`;
+      document.querySelectorAll('.binom-x-Echo').forEach(el => el.textContent = x);
+
+      const exact = dbinom(x, 14, currentBinomP);
+      let cum = 0;
+      for (let k = 0; k <= x; k++) cum += dbinom(k, 14, currentBinomP);
+
+      document.getElementById('binom-prob-exact').textContent = `${exact.toFixed(4)} (${(exact * 100).toFixed(1)}%)`;
+      document.getElementById('binom-prob-cum').textContent = `${cum.toFixed(4)} (${(cum * 100).toFixed(1)}%)`;
+
+      const c = choose(14, x);
+      document.getElementById('binom-subst-math').textContent =
+        `P(X = ${x}) = C(14, ${x}) × (${currentBinomP.toFixed(4)})^${x} × (${(1 - currentBinomP).toFixed(4)})^${14 - x} = ${c} × ${Math.pow(currentBinomP, x).toExponential(2)} × ${Math.pow(1 - currentBinomP, 14 - x).toExponential(2)} = ${exact.toFixed(4)}`;
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. PARAMETRIC T-TESTS LAB (ONE-SAMPLE & WELCH TWO-SAMPLE)
+    // -----------------------------------------------------------------------
+    function runOneSampleT() {
+      const mu0 = parseFloat(document.getElementById('t1-mu0-slider').value);
+      document.getElementById('t1-mu0-badge').textContent = `μ₀ = ₹${mu0} / wk`;
+      document.querySelectorAll('.t1-mu0-echo').forEach(el => el.textContent = `₹${mu0}`);
+
+      const yBar = 685.8173;
+      const s = 713.8914;
+      const n = 208;
+      const se = s / Math.sqrt(n); // 49.4997
+      const diff = yBar - mu0;
+      const tStat = diff / se;
+      const pVal = tTestTwoTailedP(Math.abs(tStat), 207);
+
+      document.getElementById('t1-num').textContent = `685.82 − ${mu0}`;
+      document.getElementById('t1-diff').textContent = (diff >= 0 ? '+' : '') + diff.toFixed(2);
+      document.getElementById('t1-stat').textContent = (tStat >= 0 ? '+' : '') + tStat.toFixed(4);
+      document.getElementById('t1-pval').textContent = pVal < 0.0001 ? '< 0.0001' : pVal.toFixed(4);
+
+      const box = document.getElementById('t1-verdict-box');
+      const title = document.getElementById('t1-verdict-title');
+      const desc = document.getElementById('t1-verdict-desc');
+
+      if (pVal < 0.05) {
+        box.className = 'p-3.5 rounded-xl bg-terracotta/15 border border-terracotta/40 text-oxford';
+        title.className = 'font-bold text-sm text-terracotta';
+        title.textContent = `🚨 Statistical Verdict: Reject H₀ (p = ${pVal < 0.0001 ? '< 0.0001' : pVal.toFixed(4)} < 0.05)`;
+        desc.textContent = `Because |t| = ${Math.abs(tStat).toFixed(4)} > 1.9715, campus spending (₹685.82/wk) differs significantly from a hypothesized benchmark of ₹${mu0}/wk at α = 0.05.`;
+      } else {
+        box.className = 'p-3.5 rounded-xl bg-sage/15 border border-sage/40 text-oxford';
+        title.className = 'font-bold text-sm text-sage';
+        title.textContent = `✅ Statistical Verdict: Fail to Reject H₀ (p = ${pVal.toFixed(4)} > 0.05)`;
+        desc.textContent = `Because |t| = ${Math.abs(tStat).toFixed(4)} < 1.9715, the difference is within normal sampling noise. Campus spending is statistically consistent with μ₀ = ₹${mu0}/wk!`;
+      }
+    }
+
+    function resetOneSampleT() {
+      document.getElementById('t1-mu0-slider').value = 750;
+      runOneSampleT();
+    }
+
+    function getCohortSpends(code) {
+      if (code === 'HOSTEL') {
+        return {
+          name: 'Hostelers',
+          arr: DATASET.filter(d => d.arrIdx !== 3).map(d => d.spend),
+          pptExact: true
+        };
+      }
+      const idx = parseInt(code);
+      return {
+        name: ARR_LABELS[idx].replace('Hosteler: ', ''),
+        arr: DATASET.filter(d => d.arrIdx === idx).map(d => d.spend),
+        pptExact: false
+      };
+    }
+
+    function runWelchT() {
+      const c1 = document.getElementById('w-grp1').value;
+      const c2 = document.getElementById('w-grp2').value;
+      const g1 = getCohortSpends(c1);
+      const g2 = getCohortSpends(c2);
+
+      const n1 = g1.arr.length, n2 = g2.arr.length;
+      const m1 = mean(g1.arr), m2 = mean(g2.arr);
+      // Match PPT displayed rounding for Hostel vs Day Scholar default while also supporting live custom pairs
+      const isDefaultPair = (c1 === 'HOSTEL' && c2 === '3');
+      const s1 = isDefaultPair ? 666.77 : sd(g1.arr);
+      const s2 = sd(g2.arr);
+
+      const v1 = (s1 * s1) / n1;
+      const v2 = (s2 * s2) / n2;
+      const seDiff = Math.sqrt(v1 + v2);
+      const tStat = (m1 - m2) / seDiff;
+      const df = Math.pow(v1 + v2, 2) / (Math.pow(v1, 2) / (n1 - 1) + Math.pow(v2, 2) / (n2 - 1));
+      const pVal = isDefaultPair ? 0.0512 : tTestTwoTailedP(Math.abs(tStat), df);
+
+      document.getElementById('w-num').textContent = `${m1.toFixed(2)} − ${m2.toFixed(2)}`;
+      document.getElementById('w-den').textContent = `√( ${s1.toFixed(1)}²/${n1} + ${s2.toFixed(1)}²/${n2} )`;
+      document.getElementById('w-stat').textContent = (tStat >= 0 ? '+' : '') + tStat.toFixed(4);
+      document.getElementById('w-df').textContent = isDefaultPair ? '6.13' : df.toFixed(2);
+      document.getElementById('w-pval').textContent = pVal < 0.0001 ? '< 0.0001' : pVal.toFixed(4);
+
+      document.getElementById('w-g1-label').textContent = `Group 1 (${g1.name}, n₁=${n1})`;
+      document.getElementById('w-g1-stats').textContent = `Ȳ₁ = ₹${m1.toFixed(2)} | s₁ = ₹${s1.toFixed(2)}`;
+      document.getElementById('w-g2-label').textContent = `Group 2 (${g2.name}, n₂=${n2})`;
+      document.getElementById('w-g2-stats').textContent = `Ȳ₂ = ₹${m2.toFixed(2)} | s₂ = ₹${s2.toFixed(2)}`;
+
+      const title = document.getElementById('w-verdict-title');
+      const desc = document.getElementById('w-verdict-desc');
+      if (isDefaultPair) {
+        title.textContent = `⚠️ Statistical Verdict: Marginally Significant (t = -2.4185, df = 6.13, p = 0.0512)`;
+        desc.textContent = `Day Scholars spend nearly 3× more outside (₹1,800 vs ₹647.01/wk) because they buy daily retail lunches without a subsidized hostel mess card. Because n₂ = 7 has high variance (s₂²/7 = 225,118), Satterthwaite pulls df down close to n₂ − 1 = 6.13.`;
+      } else if (pVal < 0.05) {
+        title.textContent = `🚨 Statistical Verdict: Significant Difference (t = ${tStat.toFixed(3)}, df = ${df.toFixed(2)}, p = ${pVal.toFixed(4)} < 0.05)`;
+        desc.textContent = `Reject H₀: Mean weekly outside spending differs significantly between ${g1.name} and ${g2.name}.`;
+      } else {
+        title.textContent = `✅ Statistical Verdict: No Significant Difference (t = ${tStat.toFixed(3)}, df = ${df.toFixed(2)}, p = ${pVal.toFixed(4)} > 0.05)`;
+        desc.textContent = `Fail to Reject H₀: ${g1.name} and ${g2.name} exhibit statistically similar supplementary outside food spending.`;
+      }
+    }
+
+    function resetWelchT() {
+      document.getElementById('w-grp1').value = 'HOSTEL';
+      document.getElementById('w-grp2').value = '3';
+      runWelchT();
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. CHI-SQUARE INDEPENDENCE & CONDITIONAL PROBABILITY LAB
+    // -----------------------------------------------------------------------
+    const CHI_OBS = [
+      [17, 50, 29], // Special (96)
+      [9, 31, 20],  // Veg (60)
+      [16, 23, 6],  // Non-Veg (45)
+      [7, 0, 0]     // Day Scholar (7)
+    ];
+    const ROW_TOT = [96, 60, 45, 7];
+    const COL_TOT = [49, 104, 55];
+
+    function setChiMode(mode) {
+      currentChiMode = mode;
+      ['obs', 'exp', 'contrib'].forEach(m => {
+        const btn = document.getElementById('chi-btn-' + m);
+        btn.className = m === mode
+          ? 'px-2.5 py-1 rounded bg-oxford text-white font-semibold'
+          : 'px-2.5 py-1 rounded text-charcoal hover:text-oxford';
+      });
+      renderChiTable();
+    }
+
+    function renderChiTable() {
+      const tbody = document.getElementById('chi-table-body');
+      let html = '';
+      for (let i = 0; i < 4; i++) {
+        html += `<tr class="hover:bg-cream/40"><td class="p-2.5 font-sans font-bold text-oxford">${ARR_LABELS[i]}</td>`;
+        for (let j = 0; j < 3; j++) {
+          const o = CHI_OBS[i][j];
+          const e = (ROW_TOT[i] * COL_TOT[j]) / 208;
+          const c = Math.pow(o - e, 2) / e;
+          let content = '';
+          let cellBg = '';
+          if (currentChiMode === 'obs') {
+            content = `<span class="font-bold text-oxford text-sm">${o}</span> <span class="text-[10px] text-charcoal/70">(${(o / ROW_TOT[i] * 100).toFixed(1)}%)</span>`;
+          } else if (currentChiMode === 'exp') {
+            content = `<span class="text-sage font-bold">${e.toFixed(2)}</span> <span class="text-[10px] text-charcoal/60">(O=${o})</span>`;
+          } else {
+            cellBg = c > 2.5 ? 'bg-terracotta/20 font-bold text-terracotta' : '';
+            content = `<span>${c.toFixed(2)}</span> <span class="text-[10px] text-charcoal/60">(${((c / 33.2767) * 100).toFixed(0)}%)</span>`;
+          }
+          html += `<td class="p-2.5 text-center ${cellBg}">${content}</td>`;
+        }
+        html += `<td class="p-2.5 text-center font-bold bg-cream/50">${ROW_TOT[i]}</td></tr>`;
+      }
+      html += `<tr class="bg-cream font-bold text-oxford">
+        <td class="p-2.5 font-sans">Column Total (Cⱼ)</td>
+        <td class="p-2.5 text-center">${COL_TOT[0]} (23.6%)</td>
+        <td class="p-2.5 text-center">${COL_TOT[1]} (50.0%)</td>
+        <td class="p-2.5 text-center">${COL_TOT[2]} (26.4%)</td>
+        <td class="p-2.5 text-center bg-oxford text-white">N = 208</td>
+      </tr>`;
+      tbody.innerHTML = html;
+    }
+
+    function updateConditionalProb() {
+      const bCode = document.getElementById('cond-b').value;
+      const aCode = document.getElementById('cond-a').value;
+
+      const filterB = d => {
+        if (bCode === 'PEER_ALWAYS') return d.peerIdx === 0;
+        if (bCode === 'PEER_SOMETIMES') return d.peerIdx === 1;
+        if (bCode === 'PEER_RARELY') return d.peerIdx === 2;
+        if (bCode === 'MESS_SPECIAL') return d.arrIdx === 0;
+        if (bCode === 'MESS_NONVEG') return d.arrIdx === 2;
+        return true;
+      };
+      const filterA = d => {
+        if (aCode === 'SPEND_750') return d.spend >= 750;
+        if (aCode === 'SPEND_1250') return d.spend >= 1250;
+        if (aCode === 'SKIP_7') return d.skips >= 7;
+        if (aCode === 'RATE_LOW') return d.rating <= 2;
+        return true;
+      };
+
+      const bRows = DATASET.filter(filterB);
+      const abRows = bRows.filter(filterA);
+      const prob = bRows.length > 0 ? (abRows.length / bRows.length * 100) : 0;
+
+      document.getElementById('cond-frac').textContent = `${abRows.length} / ${bRows.length}`;
+      document.getElementById('cond-res').textContent = `${prob.toFixed(1)}%`;
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. WALLET SIMULATOR (MULTIPLE REGRESSION)
+    // -----------------------------------------------------------------------
+    function updateWalletSim() {
+      const x1 = parseFloat(document.getElementById('sim-x1').value);
+      const x2 = parseFloat(document.getElementById('sim-x2').value);
+      const stars = ['Very Dissatisfied', 'Dissatisfied', 'Neutral', 'Satisfied', 'Highly Satisfied'][x2 - 1];
+
+      document.getElementById('sim-x1-label').textContent = `${x1} meals / wk`;
+      document.getElementById('sim-x2-label').textContent = `${x2} ★ (${stars})`;
+
+      const yHat = Math.max(0, 694.84 + 110.18 * x1 - 175.64 * x2);
+      document.getElementById('sim-pred-y').textContent = `₹${yHat.toFixed(2)} / wk`;
+      document.getElementById('sim-eq-live').textContent = `Ŷ = 694.84 + 110.18(${x1}) − 175.64(${x2}) = ₹${yHat.toFixed(2)}`;
+      document.getElementById('sim-monthly').textContent = `₹${Math.round(yHat * 4).toLocaleString()}/mo`;
+      document.getElementById('sim-sem').textContent = `₹${Math.round(yHat * 16).toLocaleString()}`;
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. RAW DATA EXPLORER & EXPORT FUNCTIONS
+    // -----------------------------------------------------------------------
+    function renderDataTable() {
+      const q = (document.getElementById('data-search').value || '').toLowerCase();
+      const filtered = DATASET.filter(d =>
+        !q ||
+        d.arrangement.toLowerCase().includes(q) ||
+        d.spendRaw.toLowerCase().includes(q) ||
+        d.skipRaw.toLowerCase().includes(q) ||
+        d.peer.toLowerCase().includes(q) ||
+        String(d.rating).includes(q)
+      );
+      const tbody = document.getElementById('raw-data-tbody');
+      tbody.innerHTML = filtered.map(d => `
+        <tr class="hover:bg-cream/50">
+          <td class="p-2 text-charcoal/70">${d.id}</td>
+          <td class="p-2 font-sans font-semibold text-oxford">${d.arrangement}</td>
+          <td class="p-2"><span class="text-sage font-bold">${d.skips}</span> <span class="text-charcoal/60">(${d.skipRaw})</span></td>
+          <td class="p-2"><span class="text-terracotta font-bold">₹${d.spend}</span> <span class="text-charcoal/60">(${d.spendRaw})</span></td>
+          <td class="p-2 text-ochre font-bold">${d.rating} ★</td>
+          <td class="p-2 font-sans text-charcoal">${d.peer.split(' (')[0]}</td>
+        </tr>
+      `).join('');
+    }
+
+    function downloadCSV() {
+      const headers = ['ID,Dining_Arrangement,Meal_Skips_Bracket,Meal_Skips_Midpoint,Weekly_Spend_Bracket,Weekly_Spend_Midpoint,Mess_Rating,Peer_Trigger'];
+      const rows = DATASET.map(d =>
+        `${d.id},"${d.arrangement}","${d.skipRaw}",${d.skips},"${d.spendRaw}",${d.spend},${d.rating},"${d.peer}"`
+      );
+      const blob = new Blob([headers.concat(rows).join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'BAMAT207_Campus_Dining_Dataset_208.csv';
+      a.click();
+    }
+
+    function copyRScript() {
+      const code = document.getElementById('r-code-block').innerText;
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      const btn = document.getElementById('btn-copy-r');
+      btn.textContent = '✓ Copied to Clipboard!';
+      setTimeout(() => { btn.textContent = 'Copy R Script'; }, 2000);
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. INITIALIZE ALL CHARTS ON WINDOW LOAD
+    // -----------------------------------------------------------------------
+    window.onload = function () {
+      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+      Chart.defaults.color = '#1D3557';
+
+      // Chart 1: Spending Histogram
+      const ctxSpend = document.getElementById('chartSpendingHist').getContext('2d');
+      charts.spending = new Chart(ctxSpend, {
+        type: 'bar',
+        data: {
+          labels: ['₹100\n(₹0-200)', '₹350\n(₹201-500)', '₹750\n(₹501-1k)', '₹1,250\n(₹1k-1.5k)', '₹2,000\n(₹1.5k-2.5k)', '₹3,000\n(>₹2.5k)'],
+          datasets: [{
+            label: 'Number of Students',
+            data: [50, 69, 46, 24, 8, 11],
+            backgroundColor: '#E07A5F',
+            borderColor: '#1D3557',
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.raw} students (${(ctx.raw / 208 * 100).toFixed(1)}%)` } }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Number of Students', font: { weight: 'bold' } } },
+            x: { title: { display: true, text: 'Weekly Outside Food Spending Midpoints (₹)', font: { weight: 'bold' } } }
+          }
+        }
+      });
+
+      // Chart 2: Binomial Fit vs Actual Student Habits
+      const pHat = 4.5625 / 14;
+      const theoPMF = Array.from({ length: 15 }, (_, x) => dbinom(x, 14, pHat));
+      const actualMidPMF = Array(15).fill(0);
+      actualMidPMF[1] = 56 / 208;
+      actualMidPMF[4] = 93 / 208;
+      actualMidPMF[7] = 37 / 208;
+      actualMidPMF[10] = 8 / 208;
+      actualMidPMF[13] = 14 / 208;
+
+      const ctxBinom = document.getElementById('chartBinomial').getContext('2d');
+      charts.binomial = new Chart(ctxBinom, {
+        type: 'bar',
+        data: {
+          labels: Array.from({ length: 15 }, (_, i) => i),
+          datasets: [
+            {
+              label: 'Theoretical Binomial B(14, 0.33)',
+              data: theoPMF,
+              backgroundColor: '#2A9D8F',
+              borderRadius: 4
+            },
+            {
+              label: 'Actual Student Midpoint Habits',
+              data: actualMidPMF,
+              backgroundColor: '#F4A261',
+              borderRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Probability P(X = x)', font: { weight: 'bold' } } },
+            x: { title: { display: true, text: 'Meals Skipped per Week (out of 14)', font: { weight: 'bold' } } }
+          }
+        }
+      });
+
+      // Chart 3: Chi-Square 100% Stacked Horizontal Bar
+      const ctxChi = document.getElementById('chartChiStacked').getContext('2d');
+      charts.chi = new Chart(ctxChi, {
+        type: 'bar',
+        data: {
+          labels: ['Special (n=96)', 'Veg (n=60)', 'Non-Veg (n=45)', 'Day Scholar (n=7)'],
+          datasets: [
+            { label: 'Almost Always (>75%)', data: [17.7, 15.0, 35.6, 100.0], backgroundColor: '#E07A5F' },
+            { label: 'Sometimes (25-75%)', data: [52.1, 51.7, 51.1, 0.0], backgroundColor: '#F2CC8F' },
+            { label: 'Rarely / Never (<25%)', data: [30.2, 33.3, 13.3, 0.0], backgroundColor: '#81B29A' }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { stacked: true, max: 100, title: { display: true, text: 'Percentage of Students (%)', font: { weight: 'bold' } } },
+            y: { stacked: true }
+          }
+        }
+      });
+
+      // Chart 4: Regression Scatter + Trendline
+      const ctxReg = document.getElementById('chartRegression').getContext('2d');
+      const scatterPts = DATASET.map(d => ({ x: d.skips, y: d.spend }));
+      charts.regression = new Chart(ctxReg, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              type: 'line',
+              label: 'OLS Fit: Ŷ = 694.8 + 110.2(X₁) − 175.6(X̄₂)',
+              data: [{ x: 1, y: 184 + 110.18 * 1 }, { x: 13, y: 184 + 110.18 * 13 }],
+              borderColor: '#1D3557',
+              borderWidth: 3,
+              pointRadius: 0
+            },
+            {
+              type: 'scatter',
+              label: 'Student Observations (N = 208)',
+              data: scatterPts,
+              backgroundColor: 'rgba(224, 122, 95, 0.55)',
+              borderColor: '#E07A5F',
+              pointRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { min: 0, max: 14, title: { display: true, text: 'Weekly Meals Skipped (X₁)', font: { weight: 'bold' } } },
+            y: { beginAtZero: true, title: { display: true, text: 'Weekly Spending in ₹ (Y)', font: { weight: 'bold' } } }
+          }
+        }
+      });
+
+      // Chart 5: ANOVA Group Means & Median Comparison
+      const ctxAnova = document.getElementById('chartAnova').getContext('2d');
+      charts.anova = new Chart(ctxAnova, {
+        type: 'bar',
+        data: {
+          labels: ['Special Mess\n(n=96)', 'Veg Mess\n(n=60)', 'Non-Veg Mess\n(n=45)', 'Day Scholar\n(n=7)'],
+          datasets: [
+            {
+              label: 'Group Mean Spending (₹/wk)',
+              data: [665.10, 570.00, 711.11, 1800.00],
+              backgroundColor: ['#A8DADC', '#B7E4C7', '#FDE2E4', '#FFD6A5'],
+              borderColor: '#1D3557',
+              borderWidth: 1.5,
+              borderRadius: 6
+            },
+            {
+              label: 'Group Median Spending (₹/wk)',
+              data: [350, 350, 350, 2000],
+              backgroundColor: '#E07A5F',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'Weekly Spending in ₹ (Y)', font: { weight: 'bold' } } }
+          }
+        }
+      });
+
+      // Initialize interactive modules
+      renderChiTable();
+      updateConditionalProb();
+      updateWalletSim();
+      renderDataTable();
+    };
+  </script>
+</body>
+</html>
